@@ -377,34 +377,29 @@ function App() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[
                 {
-                  icon: Footprints,
+                  image: "/empathy_walk.jpeg",
                   title: "Empathy Walk",
-                  description: "Step into someone else's shoes through guided journeys that build understanding and compassion for diverse mental health experiences.",
-                  color: "from-[#2D5016] to-[#3D6026]"
+                  description: "Step into someone else's shoes through guided journeys that build understanding and compassion for diverse mental health experiences."
                 },
                 {
-                  icon: MessageSquare,
+                  image: "/voice_worries.jpeg",
                   title: "Voice Your Worries",
-                  description: "Anonymous sharing spaces where you can express concerns freely, realizing you're not alone in your struggles.",
-                  color: "from-[#4A90E2] to-[#5AA0F2]"
+                  description: "Anonymous sharing spaces where you can express concerns freely, realizing you're not alone in your struggles."
                 },
                 {
-                  icon: Palette,
+                  image: "/art_therapy.jpeg",
                   title: "Art & Art Therapy",
-                  description: "Express emotions through creative mediums - painting, sculpting, and crafting your way to self-discovery and healing.",
-                  color: "from-[#D4AF37] to-[#E4BF47]"
+                  description: "Express emotions through creative mediums - painting, sculpting, and crafting your way to self-discovery and healing."
                 },
                 {
-                  icon: Gamepad2,
+                  image: "/wellness_games.jpeg",
                   title: "Mental Health Wellness Games",
-                  description: "Gamified learning experiences that make understanding mental health fun, interactive, and accessible to all ages.",
-                  color: "from-[#7CB342] to-[#8CC352]"
+                  description: "Gamified learning experiences that make understanding mental health fun, interactive, and accessible to all ages."
                 },
                 {
-                  icon: Music,
+                  image: "/dance_therapy.jpeg",
                   title: "Dance Therapy",
-                  description: "Move, express, and heal through rhythm and movement in sessions blending traditional Kerala dance with therapeutic practices.",
-                  color: "from-[#800020] to-[#A0153E]"
+                  description: "Move, express, and heal through rhythm and movement in sessions blending traditional Kerala dance with therapeutic practices."
                 }
               ].map((activity, index) => (
                 <motion.div
@@ -417,8 +412,12 @@ function App() {
                   className="group cursor-pointer"
                 >
                   <Card className="h-full overflow-hidden border-2 hover:border-[#D4AF37] transition-all duration-300 flex flex-col">
-                    <div className={`h-32 bg-gradient-to-br ${activity.color} flex items-center justify-center`}>
-                      <activity.icon className="w-16 h-16 text-white" />
+                    <div className="h-48 overflow-hidden">
+                      <img
+                        src={activity.image}
+                        alt={activity.title}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
                     </div>
                     <CardHeader>
                       <CardTitle className="text-[#800020] text-xl">{activity.title}</CardTitle>
