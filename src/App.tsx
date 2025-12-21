@@ -420,13 +420,13 @@ function App() {
               </div>
 
               <div className="space-y-6 text-lg md:text-xl text-gray-700 leading-relaxed">
-                <p>
+                <p className="hidden md:block">
                   Festivals have always been at the heart of Kerala's culture - they bring people together, create joy, and foster deep connections. But what if we could harness this power to address one of our most pressing challenges?
                 </p>
                 <p className="text-[#2D5016] font-medium">
                   Dhriti reimagines the festival experience as a safe, engaging space where mental health conversations happen naturally. Through interactive activities, creative expression, and community celebration, we're making it easier for people to open up, seek help early, and support one another.
                 </p>
-                <p>
+                <p className="hidden md:block">
                   When mental health support feels like celebration rather than treatment, stigma dissolves. When communities gather with purpose and joy, transformation happens. This is the Dhriti way.
                 </p>
               </div>
@@ -467,7 +467,7 @@ function App() {
               </p>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 md:gap-6">
               {[
                 {
                   icon: Shield,
@@ -503,14 +503,14 @@ function App() {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
                   <Card className="h-full hover:shadow-xl transition-all duration-300 hover:-translate-y-2 active:scale-95 bg-white border-[#D4AF37]/20">
-                    <CardHeader className="text-center">
-                      <div className="w-16 h-16 mx-auto bg-gradient-to-br from-[#800020] to-[#A0153E] rounded-full flex items-center justify-center mb-4">
-                        <objective.icon className="w-8 h-8 text-[#D4AF37]" />
+                    <CardHeader className="text-center p-4 pb-2 md:p-6">
+                      <div className="w-12 h-12 md:w-16 md:h-16 mx-auto bg-gradient-to-br from-[#800020] to-[#A0153E] rounded-full flex items-center justify-center mb-3 md:mb-4">
+                        <objective.icon className="w-6 h-6 md:w-8 md:h-8 text-[#D4AF37]" />
                       </div>
-                      <CardTitle className="text-[#800020]">{objective.title}</CardTitle>
+                      <CardTitle className="text-[#800020] text-sm md:text-xl leading-tight">{objective.title}</CardTitle>
                     </CardHeader>
-                    <CardContent>
-                      <CardDescription className="text-center text-gray-600">
+                    <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
+                      <CardDescription className="text-center text-gray-600 hidden md:block">
                         {objective.description}
                       </CardDescription>
                     </CardContent>
@@ -539,7 +539,7 @@ function App() {
               </p>
             </motion.div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 mb-16">
               {[
                 {
                   metric: "10,000+",
@@ -570,10 +570,10 @@ function App() {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   className="text-center"
                 >
-                  <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-[#800020] to-[#A0153E] rounded-full flex items-center justify-center">
-                    <stat.icon className="w-10 h-10 text-[#D4AF37]" />
+                  <div className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 bg-gradient-to-br from-[#800020] to-[#A0153E] rounded-full flex items-center justify-center">
+                    <stat.icon className="w-8 h-8 md:w-10 md:h-10 text-[#D4AF37]" />
                   </div>
-                  <div className="text-4xl md:text-5xl font-bold text-[#800020] mb-2">
+                  <div className="text-3xl md:text-5xl font-bold text-[#800020] mb-2">
                     {stat.metric}
                   </div>
                   <p className="text-gray-700 font-medium">{stat.label}</p>
@@ -598,7 +598,7 @@ function App() {
                       <Heart className="w-5 h-5 text-[#D4AF37]" />
                       Improved Emotional Awareness
                     </h4>
-                    <p className="text-white/80">
+                    <p className="text-white/80 hidden md:block">
                       Participants gain practical tools to recognize, understand, and express their emotions healthily.
                     </p>
                   </div>
@@ -607,7 +607,7 @@ function App() {
                       <Users className="w-5 h-5 text-[#D4AF37]" />
                       Strengthened Support Networks
                     </h4>
-                    <p className="text-white/80">
+                    <p className="text-white/80 hidden md:block">
                       Building lasting connections between individuals, families, schools, and organizations committed to mental wellness.
                     </p>
                   </div>
@@ -616,7 +616,7 @@ function App() {
                       <Brain className="w-5 h-5 text-[#D4AF37]" />
                       Early Intervention Mindset
                     </h4>
-                    <p className="text-white/80">
+                    <p className="text-white/80 hidden md:block">
                       Shifting from crisis response to proactive mental health care through early help-seeking behaviors.
                     </p>
                   </div>
@@ -625,7 +625,7 @@ function App() {
                       <Sparkles className="w-5 h-5 text-[#D4AF37]" />
                       Cultural Transformation
                     </h4>
-                    <p className="text-white/80">
+                    <p className="text-white/80 hidden md:block">
                       Leading Kerala toward a future where mental health is discussed as openly as physical health.
                     </p>
                   </div>
@@ -1046,14 +1046,14 @@ function App() {
                 <p className="text-xl text-white/90 max-w-2xl mx-auto">
                   Align your organization with Kerala's groundbreaking mental health initiative
                 </p>
-                <div className="inline-block mt-4 px-4 py-2 bg-[#FDD835]/20 rounded-lg">
+                <div className="inline-block mt-4 px-4 py-2 bg-[#FDD835]/20 rounded-lg hidden md:inline-block">
                   <p className="text-[#FDD835] font-semibold">
                     Perfect timing for March CSR closing
                   </p>
                 </div>
               </div>
 
-              <div className="grid md:grid-cols-3 gap-8 mb-12">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 mb-12">
                 {[
                   {
                     icon: Award,
@@ -1080,8 +1080,8 @@ function App() {
                   >
                     <div className="bg-white/10 backdrop-blur-md p-8 rounded-xl border border-[#D4AF37]/30 hover:bg-white/20 transition-all duration-300">
                       <benefit.icon className="w-12 h-12 text-[#D4AF37] mb-4" />
-                      <h3 className="text-xl font-bold text-white mb-3">{benefit.title}</h3>
-                      <p className="text-white/80">{benefit.description}</p>
+                      <h3 className="text-lg md:text-xl font-bold text-white mb-1 md:mb-3">{benefit.title}</h3>
+                      <p className="text-white/80 hidden md:block">{benefit.description}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -1103,12 +1103,12 @@ function App() {
                   ].map((role, index) => (
                     <div
                       key={index}
-                      className="border border-[#D4AF37]/30 bg-white/5 rounded-lg p-6 flex flex-col items-center justify-center aspect-video group hover:bg-[#D4AF37]/10 transition-colors cursor-pointer"
+                      className="border border-[#D4AF37]/30 bg-white/5 rounded-lg p-3 md:p-6 flex flex-col items-center justify-center aspect-[2/1] md:aspect-video group hover:bg-[#D4AF37]/10 transition-colors cursor-pointer"
                     >
-                      <div className="w-12 h-12 rounded-full border border-dashed border-[#D4AF37]/50 flex items-center justify-center mb-3 group-hover:border-solid group-hover:bg-[#D4AF37] group-hover:text-[#800020] transition-all">
-                        <span className="text-[#D4AF37] text-2xl group-hover:text-[#800020]">+</span>
+                      <div className="w-8 h-8 md:w-12 md:h-12 rounded-full border border-dashed border-[#D4AF37]/50 flex items-center justify-center mb-2 md:mb-3 group-hover:border-solid group-hover:bg-[#D4AF37] group-hover:text-[#800020] transition-all">
+                        <span className="text-[#D4AF37] text-xl md:text-2xl group-hover:text-[#800020]">+</span>
                       </div>
-                      <span className="text-white/80 font-medium text-sm text-center group-hover:text-white">{role}</span>
+                      <span className="text-white/80 font-medium text-xs md:text-sm text-center group-hover:text-white">{role}</span>
                     </div>
                   ))}
                 </div>
