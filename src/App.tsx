@@ -195,9 +195,9 @@ function App() {
         </div>
       </nav>
 
-      <main className="w-full pt-16">
+      <main className="w-full pt-0 md:pt-16">
         {/* Hero Section */}
-        <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#800020] via-[#A0153E] to-[#5C0120]">
+        <section id="home" className="relative min-h-[100dvh] md:h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#800020] via-[#A0153E] to-[#5C0120]">
           {/* Kerala Pattern Background */}
           <motion.div className="absolute inset-0 opacity-10" style={{ y: y1 }}>
             <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
@@ -219,28 +219,29 @@ function App() {
             </svg>
           </motion.div>
 
-          {/* Floating Mandalas Layer - Slow Move - Desktop Only */}
-          <motion.div className="absolute inset-0 opacity-5 hidden md:block" style={{ y: useTransform(scrollY, [0, 1000], [0, -300]) }}>
+          {/* Floating Mandalas Layer - Slow Move - NOW VISIBLE ON MOBILE */}
+          <motion.div className="absolute inset-0 opacity-10 md:opacity-5 block" style={{ y: useTransform(scrollY, [0, 1000], [0, -300]) }}>
             <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
               <rect width="100%" height="100%" fill="url(#mandala-pattern)" />
             </svg>
           </motion.div>
 
           {/* Elephant Silhouette - Parallax Layer */}
+          {/* Elephant Silhouette - Parallax Layer - NOW VISIBLE */}
           <motion.div
-            className="absolute top-1/4 left-10 opacity-10 hidden xl:block"
+            className="absolute top-[15%] left-[-20px] md:top-1/4 md:left-10 opacity-10 block"
             style={{ x: useTransform(scrollY, [0, 1000], [0, 100]) }}
           >
-            <svg width="150" height="100" viewBox="0 0 150 100" fill="#D4AF37">
+            <svg width="150" height="100" viewBox="0 0 150 100" fill="#D4AF37" className="scale-75 md:scale-100">
               <path d="M120,70 Q110,60 100,60 L80,60 Q60,60 50,70 Q40,80 40,90 L40,95 L50,95 L50,90 Q50,85 60,85 L70,85 L70,95 L80,95 L80,75 L100,75 Q110,75 115,80 L120,85 Z" opacity="0.8" />
               <circle cx="115" cy="65" r="2" fill="white" />
               <path d="M115,70 Q120,80 110,90" stroke="#D4AF37" strokeWidth="2" fill="none" />
             </svg>
           </motion.div>
 
-          {/* Decorative Kerala Lamps */}
-          <motion.div className="absolute top-24 left-10 opacity-20 hidden lg:block" style={{ y: y2 }}>
-            <svg width="60" height="80" viewBox="0 0 60 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Decorative Kerala Lamps - NOW VISIBLE */}
+          <motion.div className="absolute top-[80px] left-4 md:top-24 md:left-10 opacity-20 block" style={{ y: y2 }}>
+            <svg width="60" height="80" viewBox="0 0 60 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="scale-75 md:scale-100">
               <path d="M30 10 Q25 20 30 30 Q35 20 30 10" fill="#D4AF37" />
               <ellipse cx="30" cy="35" rx="15" ry="8" fill="#D4AF37" />
               <rect x="28" y="35" width="4" height="30" fill="#D4AF37" />
@@ -248,8 +249,8 @@ function App() {
             </svg>
           </motion.div>
 
-          <motion.div className="absolute top-24 right-10 opacity-20 hidden lg:block" style={{ y: y2 }}>
-            <svg width="60" height="80" viewBox="0 0 60 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <motion.div className="absolute top-[80px] right-4 md:top-24 md:right-10 opacity-20 block" style={{ y: y2 }}>
+            <svg width="60" height="80" viewBox="0 0 60 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="scale-75 md:scale-100">
               <path d="M30 10 Q25 20 30 30 Q35 20 30 10" fill="#D4AF37" />
               <ellipse cx="30" cy="35" rx="15" ry="8" fill="#D4AF37" />
               <rect x="28" y="35" width="4" height="30" fill="#D4AF37" />

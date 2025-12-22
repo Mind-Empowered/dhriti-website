@@ -168,9 +168,19 @@ export function ButterflyBackground() {
     const [mounted, setMounted] = useState(false);
     const [isScrolling, setIsScrolling] = useState(false);
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+    const [butterflyCount, setButterflyCount] = useState(8);
 
     useEffect(() => {
         setMounted(true);
+
+        // Initial check for screen size
+        const updateCount = () => {
+            const isMobile = window.innerWidth < 768;
+            setButterflyCount(isMobile ? 3 : 8);
+        };
+
+        updateCount();
+
         let scrollTimeout: NodeJS.Timeout;
 
         const handleScroll = () => {
@@ -183,12 +193,18 @@ export function ButterflyBackground() {
             setMousePos({ x: e.clientX, y: e.clientY });
         };
 
+        const handleResize = () => {
+            updateCount();
+        };
+
         window.addEventListener("scroll", handleScroll);
         window.addEventListener("mousemove", handleMouseMove);
+        window.addEventListener("resize", handleResize);
 
         return () => {
             window.removeEventListener("scroll", handleScroll);
             window.removeEventListener("mousemove", handleMouseMove);
+            window.removeEventListener("resize", handleResize);
             clearTimeout(scrollTimeout);
         };
     }, []);
@@ -197,7 +213,7 @@ export function ButterflyBackground() {
 
     return (
         <div className="fixed inset-0 pointer-events-none overflow-hidden z-[50]">
-            {[...Array(8)].map((_, i) => (
+            {[...Array(butterflyCount)].map((_, i) => (
                 <Butterfly key={i} index={i} isFlying={isScrolling} delay={i * 0.3} mousePos={mousePos} />
             ))}
         </div>
