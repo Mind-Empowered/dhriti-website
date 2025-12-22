@@ -86,7 +86,55 @@ const Butterfly = ({ isFlying, delay, mousePos, index, isSpecial, onClick, attra
     useEffect(() => {
         if (isHovered) return;
 
-        if (isFlying) {
+        // Check Attraction Target Visibility FIRST (Override Flight Mode)
+        let isAttracted = false;
+        let destX = 0, destY = 0;
+
+        if (attractionTarget) {
+            const rect = attractionTarget.getBoundingClientRect();
+            // Check if target is actually in viewport/visible with slight buffer
+            const isVisible = (
+                rect.top >= -50 &&
+                rect.left >= -50 &&
+                rect.bottom <= (window.innerHeight + 50) &&
+                rect.right <= (window.innerWidth + 50)
+            );
+
+            if (isVisible) {
+                isAttracted = true;
+                // Swarm the center with some randomness
+                destX = rect.left + (rect.width / 2) + ((Math.random() - 0.5) * rect.width * 1.2);
+                destY = rect.top + (rect.height / 2) + ((Math.random() - 0.5) * rect.height * 1.2);
+            }
+        }
+
+        if (isAttracted) {
+            // ATTRACTION MODE - Fly to target ASAP
+            controls.start({
+                x: destX,
+                y: destY,
+                opacity: 1,
+                scale: 1, // Full size
+                transition: {
+                    duration: 1.5 + Math.random() * 1.0, // Fast swarm (1.5-2.5s)
+                    type: "spring",
+                    stiffness: 50,
+                    damping: 15
+                }
+            });
+
+            // Gentle rotation when swarming
+            rotateControls.start({
+                rotate: (Math.random() - 0.5) * 30,
+                transition: {
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatType: "mirror",
+                    ease: "easeInOut"
+                }
+            });
+        }
+        else if (isFlying) {
             // CHAOTIC FLIGHT MODE - Position
             controls.start({
                 x: [
@@ -125,32 +173,9 @@ const Butterfly = ({ isFlying, delay, mousePos, index, isSpecial, onClick, attra
         } else {
             // LANDING MODE
             const spots = getLandingSpots();
-            let destX, destY;
 
-            // PRIORITY: Check for Attraction Target (Swarm Mode)
-            if (attractionTarget) {
-                const rect = attractionTarget.getBoundingClientRect();
-                // Check if target is actually in viewport/visible
-                const isVisible = (
-                    rect.top >= -100 &&
-                    rect.left >= -100 &&
-                    rect.bottom <= (window.innerHeight + 100) &&
-                    rect.right <= (window.innerWidth + 100)
-                );
-
-                if (isVisible) {
-                    // Swarm the center with some randomness
-                    destX = rect.left + (rect.width / 2) + ((Math.random() - 0.5) * rect.width * 1.5); // Spread slightly wider than the box
-                    destY = rect.top + (rect.height / 2) + ((Math.random() - 0.5) * rect.height * 1.5);
-                } else {
-                    // Fallback if target is off-screen
-                    // We must set destX/destY here to avoid undefined usage later if we fall through
-                    destX = Math.random() * window.innerWidth;
-                    destY = Math.random() * window.innerHeight;
-                }
-            }
             // NORMAL LANDING LOGIC
-            else if (spots.length > 0 && Math.random() > 0.1) { // 90% chance to land on element
+            if (spots.length > 0 && Math.random() > 0.1) { // 90% chance to land on element
                 // Smart Distribution: Use index to round-robin through available spots
                 // For Special Butterfly, pick RANDOM spot to avoid getting stuck on a hidden first element
                 const spotIndex = isSpecial ? Math.floor(Math.random() * spots.length) : (index % spots.length);
@@ -373,7 +398,7 @@ export function ButterflyBackground({ attractionTarget }: { attractionTarget?: H
         const handleScroll = () => {
             setIsScrolling(true);
             clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => setIsScrolling(false), 800);
+            scrollTimeout = setTimeout(() => setIsScrolling(false), 200);
         };
 
         const handleMouseMove = (e: MouseEvent) => {
