@@ -42,6 +42,8 @@ function App() {
     seconds: 0
   });
 
+  const [surpriseBoxRef, setSurpriseBoxRef] = useState<HTMLElement | null>(null);
+
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 500], [0, 200]); // Moves down
   const y2 = useTransform(scrollY, [0, 500], [0, -150]); // Moves up
@@ -90,18 +92,18 @@ function App() {
   };
   return (
     <div className="w-full min-h-screen bg-gradient-to-b from-[#FFF8DC] to-white relative">
-      <ButterflyBackground />
+      <ButterflyBackground attractionTarget={surpriseBoxRef} />
       {/* Top Navigation Bar */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[#800020]/95 backdrop-blur-md border-b border-[#D4AF37]/20">
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between h-16">
             {/* Mind Empowered Header - Left Side */}
-            <div className="flex items-center gap-2">
+            <a href="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity">
               <img src="/logo.jpeg" alt="Mind Empowered Logo" className="w-10 h-10 object-cover rounded-full border-2 border-[#D4AF37]" />
               <span className="text-white font-bold text-lg tracking-wide">
                 MIND EMPOWERED
               </span>
-            </div>
+            </a>
 
             {/* Navigation Links - Right Side */}
             {/* Desktop Navigation */}
@@ -123,7 +125,7 @@ function App() {
                     <Menu className="w-6 h-6" />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="bg-gradient-to-b from-[#800020] to-[#4a0013] border-l border-[#D4AF37]/30 text-white p-0">
+                <SheetContent side="right" className="bg-gradient-to-b from-[#800020]/90 to-[#4a0013]/90 backdrop-blur-md border-l border-[#D4AF37]/30 text-white p-0">
                   <div className="flex flex-col h-full">
                     {/* Menu Header */}
                     <div className="p-6 border-b border-[#D4AF37]/20 bg-black/10">
@@ -420,93 +422,7 @@ function App() {
         {/* The Why Section */}
         <section id="why" className="py-20 md:py-32 bg-white">
           {/* Theme of the Year Section */}
-          <div className="container mx-auto px-6 mb-24">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="text-center max-w-5xl mx-auto"
-            >
-              <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-[#800020]/5 border border-[#800020]/10 text-[#800020] font-bold text-sm mb-8 uppercase tracking-widest shadow-sm">
-                <Sparkles className="w-4 h-4 text-[#D4AF37]" />
-                Theme of 2026
-                <Sparkles className="w-4 h-4 text-[#D4AF37]" />
-              </div>
-
-              {/* Enhanced Title */}
-              <h2 className="text-5xl md:text-7xl font-bold text-[#800020] mb-12 leading-tight relative inline-block">
-                Celebrating{" "}
-                <span className="relative">
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] via-[#B4941F] to-[#D4AF37] bg-300% animate-gradient">
-                    Resilience
-                  </span>
-                  {/* Decorative Underline */}
-                  <svg className="absolute -bottom-2 left-0 w-full h-4 text-[#D4AF37]" viewBox="0 0 100 10" preserveAspectRatio="none">
-                    <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.5" />
-                  </svg>
-                </span>
-              </h2>
-
-              <div className="group relative">
-                {/* Dynamic Kintsugi Background Glow */}
-                <div className="absolute -inset-1 bg-gradient-to-r from-[#D4AF37] via-[#800020] to-[#D4AF37] rounded-[2.5rem] opacity-20 group-hover:opacity-40 blur-xl transition-opacity duration-700"></div>
-
-                <div className="bg-[#FFFaf0] rounded-[2rem] p-8 md:p-14 shadow-2xl border border-[#D4AF37]/20 relative overflow-hidden isolate">
-                  {/* Kintsugi Gold Cracks Pattern */}
-                  <div className="absolute inset-0 opacity-10 pointer-events-none">
-                    <svg className="w-full h-full" viewBox="0 0 400 400" preserveAspectRatio="none">
-                      <path d="M0 100 Q 50 120 100 80 T 200 150 T 300 100 T 400 180" stroke="#D4AF37" strokeWidth="2" fill="none" />
-                      <path d="M400 300 Q 350 280 300 320 T 200 250 T 100 300 T 0 220" stroke="#D4AF37" strokeWidth="2" fill="none" />
-                      <path d="M150 0 Q 180 50 140 100 T 180 200" stroke="#D4AF37" strokeWidth="1.5" fill="none" />
-                      <path d="M250 400 Q 220 350 260 300 T 220 200" stroke="#D4AF37" strokeWidth="1.5" fill="none" />
-                    </svg>
-                  </div>
-
-                  {/* Floating Blur Elements */}
-                  <motion.div
-                    animate={{ y: [0, -10, 0] }}
-                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute top-0 right-0 w-64 h-64 bg-[#D4AF37]/5 rounded-full blur-3xl -mr-20 -mt-20"
-                  />
-                  <motion.div
-                    animate={{ y: [0, 10, 0] }}
-                    transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute bottom-0 left-0 w-64 h-64 bg-[#800020]/5 rounded-full blur-3xl -ml-20 -mb-20"
-                  />
-
-                  <Quote className="absolute top-10 left-10 w-16 h-16 text-[#D4AF37]/20" />
-
-                  <div className="space-y-8 text-lg md:text-2xl text-[#3E2723] leading-relaxed font-light relative z-10 font-serif">
-                    <p>
-                      This year, Dhriti honors the <span className="font-semibold text-[#800020]">indomitable human spirit</span>.
-                      Resilience is not about never falling; it is about the <i className="text-[#800020]">courage to rise</i>, again and again.
-                    </p>
-                    <p className="text-base md:text-xl text-[#3E2723]/80">
-                      Just like the art of <span className="font-semibold text-[#D4AF37]">Kintsugi</span> repairs broken pottery with gold,
-                      we celebrate our scars not as flaws, but as beautiful proof of our survival and strength.
-                    </p>
-                  </div>
-
-                  <div className="flex flex-row justify-center md:grid md:grid-cols-3 gap-4 md:gap-8 mt-8 md:mt-16 pt-8 md:pt-12 border-t border-[#D4AF37]/20">
-                    {[
-                      { icon: Shield, title: "Strength", desc: "Finding power in vulnerability" },
-                      { icon: TrendingUp, title: "Growth", desc: "Evolving through challenges" },
-                      { icon: Users, title: "Support", desc: "Lifting each other up" }
-                    ].map((item, idx) => (
-                      <div key={idx} className="flex-1 text-center group/item hover:-translate-y-1 transition-transform duration-300">
-                        <div className="w-12 h-12 md:w-20 md:h-20 mx-auto bg-gradient-to-br from-[#FFF8DC] to-[#FFE4B5] rounded-xl md:rounded-2xl rotate-3 group-hover/item:rotate-6 transition-transform duration-300 shadow-lg border border-[#D4AF37]/20 flex items-center justify-center mb-3 md:mb-6">
-                          <item.icon className="w-6 h-6 md:w-10 md:h-10 text-[#800020] group-hover/item:text-[#D4AF37] transition-colors" />
-                        </div>
-                        <h3 className="font-bold text-sm md:text-xl text-[#800020] mb-1 md:mb-3">{item.title}</h3>
-                        <p className="text-[#3E2723]/70 text-[10px] md:text-base leading-tight md:leading-normal">{item.desc}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
+          <ThemeSection />
 
           <div className="container mx-auto px-6">
             <motion.div
@@ -756,7 +672,7 @@ function App() {
             </motion.div>
 
             {/* Activities Container - Horizontal scroll on mobile, Grid on desktop */}
-            <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 -mx-6 px-6 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-8 md:pb-0 md:mx-0 md:px-0 custom-scrollbar scroll-smooth">
+            <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 -mx-6 px-6 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-8 md:pb-0 md:mx-0 md:px-0 md:overflow-visible custom-scrollbar scroll-smooth">
               {[
                 {
                   image: "/empathy_walk.png",
@@ -782,6 +698,11 @@ function App() {
                   image: "/dance_therapy.png",
                   title: "Dance Therapy",
                   description: "Move, express, and heal through rhythm and movement in sessions blending traditional Kerala dance with therapeutic practices."
+                },
+                {
+                  isSurprise: true,
+                  title: "A Surprise Event",
+                  description: "It's a surprise event. Join us to find out!"
                 }
               ].map((activity, index) => (
                 <motion.div
@@ -791,39 +712,100 @@ function App() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   className="min-w-[70vw] md:min-w-0 snap-center"
+                  ref={activity.isSurprise ? setSurpriseBoxRef : undefined}
                 >
                   <motion.div
-                    whileHover={{ scale: 1.05 }}
+                    initial={{ scale: 0.9, rotate: 0 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    whileHover={activity.isSurprise ? { rotate: [0, -3, 3, -3, 3, 0], transition: { duration: 2, repeat: Infinity, ease: "easeInOut" } } : { scale: 1.05 }}
                     className="group cursor-pointer h-full"
                   >
-                    <Card className="h-full overflow-hidden border-2 hover:border-[#D4AF37] transition-all duration-300 flex flex-col active:scale-95">
-                      <div className="h-48 overflow-hidden">
-                        <img
-                          src={activity.image}
-                          alt={activity.title}
-                          className="w-full h-full object-cover transition-transform duration-500 md:group-hover:scale-110"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            if (target.src.includes('.jpeg')) {
-                              target.src = target.src.replace('.jpeg', '.png');
-                            } else if (target.src.includes('.png')) {
-                              target.src = target.src.replace('.png', '.jpeg');
-                            } else if (target.src.includes('.jpg')) {
-                              target.src = target.src.replace('.jpg', '.png');
-                            }
-                          }}
-                        />
+                    <Card className={`h-full overflow-hidden border-2 transition-all duration-300 flex flex-col active:scale-95 relative ${activity.isSurprise ? 'bg-gradient-to-br from-[#4a0013] via-[#800020] to-[#4a0013] border-[#FFD700] shadow-[0_0_30px_rgba(128,0,32,0.4)]' : 'bg-white border-[#D4AF37]/20 hover:border-[#D4AF37]'}`}>
+                      {/* Ribbons for Surprise Card - Cover Entire Card */}
+                      {/* Ribbons for Surprise Card - Cover Entire Card */}
+                      {activity.isSurprise && (
+                        <>
+                          {/* Vertical Ribbon */}
+                          <div className="absolute inset-y-0 left-1/2 w-8 -translate-x-1/2 bg-gradient-to-b from-[#FFD700]/30 via-[#FFD700]/10 to-[#FFD700]/30 border-x border-[#FFD700]/50 shadow-[0_0_15px_rgba(255,215,0,0.3)] pointer-events-none z-0">
+                            <div className="absolute inset-0 bg-white/20 animate-pulse" />
+                          </div>
+                          {/* Horizontal Ribbon - Moved to upper third (lid style) */}
+                          <div className="absolute inset-x-0 top-[35%] h-8 -translate-y-1/2 bg-gradient-to-r from-[#FFD700]/30 via-[#FFD700]/10 to-[#FFD700]/30 border-y border-[#FFD700]/50 shadow-[0_0_15px_rgba(255,215,0,0.3)] pointer-events-none z-0">
+                            <div className="absolute inset-0 bg-white/20 animate-pulse" />
+                          </div>
+                          {/* Central Butterfly Bow */}
+                          <div className="absolute top-[35%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none">
+                            <motion.svg
+                              width="80"
+                              height="60"
+                              viewBox="0 0 80 60"
+                              fill="none"
+                              className="drop-shadow-[0_4px_8px_rgba(0,0,0,0.3)] filter brightness-110 w-16 h-12 md:w-20 md:h-16"
+                              animate={{ scale: [1, 1.05, 1] }}
+                              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                            >
+                              {/* Left Loop (Butterfly Wing Shape) */}
+                              <path d="M40 30 C 20 10, 0 10, 5 30 C 10 45, 30 35, 40 30" fill="url(#goldGradient)" filter="url(#glow)" />
+                              {/* Right Loop (Butterfly Wing Shape) */}
+                              <path d="M40 30 C 60 10, 80 10, 75 30 C 70 45, 50 35, 40 30" fill="url(#goldGradient)" filter="url(#glow)" />
+
+                              {/* Tails */}
+                              <path d="M40 30 Q 30 50 20 55" stroke="url(#goldGradient)" strokeWidth="4" strokeLinecap="round" />
+                              <path d="M40 30 Q 50 50 60 55" stroke="url(#goldGradient)" strokeWidth="4" strokeLinecap="round" />
+
+                              {/* Center Knot */}
+                              <circle cx="40" cy="30" r="5" fill="#FFE4B5" stroke="#B8860B" strokeWidth="1" />
+
+                              <defs>
+                                <linearGradient id="goldGradient" x1="0" y1="0" x2="0" y2="1">
+                                  <stop offset="0%" stopColor="#FFD700" />
+                                  <stop offset="50%" stopColor="#B8860B" />
+                                  <stop offset="100%" stopColor="#FFD700" />
+                                </linearGradient>
+                                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                                  <feGaussianBlur stdDeviation="2" result="blur" />
+                                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                                </filter>
+                              </defs>
+                            </motion.svg>
+                          </div>
+                        </>
+                      )}
+
+                      <div className={`h-48 overflow-hidden flex items-center justify-center relative z-10 ${activity.isSurprise ? 'bg-[#800020]/20' : ''}`}>
+                        {activity.isSurprise ? (
+                          <div className="relative w-full h-full flex items-center justify-center">
+                            <Sparkles className="absolute -top-4 -right-4 w-8 h-8 text-white animate-pulse" />
+                          </div>
+                        ) : (
+                          <img
+                            src={activity.image}
+                            alt={activity.title}
+                            className="w-full h-full object-cover transition-transform duration-500 md:group-hover:scale-110"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              if (target.src.includes('.jpeg')) {
+                                target.src = target.src.replace('.jpeg', '.png');
+                              } else if (target.src.includes('.png')) {
+                                target.src = target.src.replace('.png', '.jpeg');
+                              } else if (target.src.includes('.jpg')) {
+                                target.src = target.src.replace('.jpg', '.png');
+                              }
+                            }}
+                          />
+                        )}
                       </div>
-                      <CardHeader>
-                        <CardTitle className="text-[#800020] text-xl">{activity.title}</CardTitle>
+                      <CardHeader className="relative z-10">
+                        <CardTitle className={`${activity.isSurprise ? 'text-[#FFD700]' : 'text-[#800020]'} text-xl`}>{activity.title}</CardTitle>
                       </CardHeader>
-                      <CardContent className="flex-grow flex flex-col">
-                        <p className="text-gray-600 mb-4 flex-grow">{activity.description}</p>
+                      <CardContent className="flex-grow flex flex-col relative z-10">
+                        <p className={`${activity.isSurprise ? 'text-[#FFE4B5]' : 'text-gray-600'} mb-4 flex-grow`}>{activity.description}</p>
                         <Button
-                          className="w-full bg-[#800020] hover:bg-[#A0153E] text-white mt-4 active:scale-95 transition-transform"
+                          disabled={activity.isSurprise}
+                          className={`w-full ${activity.isSurprise ? 'bg-[#FFD700]/50 text-[#800020]/70 cursor-not-allowed border border-[#800020]/20' : 'bg-[#800020] hover:bg-[#A0153E] text-white active:scale-95'} mt-4 transition-all`}
                           size="sm"
                         >
-                          Register for this Activity
+                          {activity.isSurprise ? 'Coming Soon...' : 'Register for this Activity'}
                         </Button>
                       </CardContent>
                     </Card>
@@ -1208,10 +1190,12 @@ function App() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                   >
-                    <div className="bg-white/60 backdrop-blur-md p-8 rounded-xl border border-[#800020]/20 hover:bg-white/80 transition-all duration-300">
-                      <benefit.icon className="w-12 h-12 text-[#800020] mb-4" />
-                      <h3 className="text-lg md:text-xl font-bold text-[#3E2723] mb-1 md:mb-3">{benefit.title}</h3>
-                      <p className="text-[#3E2723]/80 hidden md:block">{benefit.description}</p>
+                    <div className="bg-white/60 backdrop-blur-md p-6 rounded-xl border border-[#800020]/20 hover:bg-white/80 transition-all duration-300 flex items-start gap-4">
+                      <benefit.icon className="w-8 h-8 text-[#800020] shrink-0" />
+                      <div>
+                        <h3 className="text-lg md:text-xl font-bold text-[#3E2723] mb-1">{benefit.title}</h3>
+                        <p className="text-[#3E2723]/80 text-sm hidden md:block">{benefit.description}</p>
+                      </div>
                     </div>
                   </motion.div>
                 ))}

@@ -4,9 +4,7 @@
 /// <reference types="react-dom" />
 
 // Import all module declarations
-import './modules';
-import './next';
-import './styled-jsx';
+
 
 // Global augmentation for better TypeScript support
 declare global {
@@ -43,4 +41,4 @@ export type PropsWithChildren<P = any> = P & {
 export type ComponentWithProps<P = any> = React.ComponentType<P & Record<string, any>>;
 
 // Export everything to make it available globally
-export {}; 
+export { }; 

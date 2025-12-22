@@ -47,7 +47,7 @@ const isOverlappingText = (x: number, y: number) => {
     return false;
 };
 
-const Butterfly = ({ isFlying, delay, mousePos, index, isSpecial, onClick }: { isFlying: boolean, delay: number, mousePos: { x: number, y: number }, index: number, isSpecial?: boolean, onClick?: () => void }) => {
+const Butterfly = ({ isFlying, delay, mousePos, index, isSpecial, onClick, attractionTarget }: { isFlying: boolean, delay: number, mousePos: { x: number, y: number }, index: number, isSpecial?: boolean, onClick?: () => void, attractionTarget?: HTMLElement | null }) => {
     const controls = useAnimation();
     const rotateControls = useAnimation(); // New controller for rotation only
     const wingControls = useAnimation();
@@ -84,26 +84,30 @@ const Butterfly = ({ isFlying, delay, mousePos, index, isSpecial, onClick }: { i
     }, [controls]);
 
     useEffect(() => {
+        if (isHovered) return;
+
         if (isFlying) {
             // CHAOTIC FLIGHT MODE - Position
             controls.start({
                 x: [
                     null,
                     Math.random() * window.innerWidth,
+                    Math.random() * window.innerWidth,
                     Math.random() * window.innerWidth
                 ],
                 y: [
                     null,
+                    Math.random() * window.innerHeight,
                     Math.random() * window.innerHeight,
                     Math.random() * window.innerHeight
                 ],
                 opacity: 0.9,
                 scale: 1,
                 transition: {
-                    duration: 25 + Math.random() * 10,
+                    duration: 15 + Math.random() * 15, // Reduced min duration for faster dispersal
                     repeat: Infinity,
                     repeatType: "mirror",
-                    ease: "easeInOut"
+                    ease: "linear" // Linear ease prevents 'hanging' at endpoints, making it look more continuous
                 }
             });
 
@@ -123,7 +127,30 @@ const Butterfly = ({ isFlying, delay, mousePos, index, isSpecial, onClick }: { i
             const spots = getLandingSpots();
             let destX, destY;
 
-            if (spots.length > 0 && Math.random() > 0.1) { // 90% chance to land on element
+            // PRIORITY: Check for Attraction Target (Swarm Mode)
+            if (attractionTarget) {
+                const rect = attractionTarget.getBoundingClientRect();
+                // Check if target is actually in viewport/visible
+                const isVisible = (
+                    rect.top >= -100 &&
+                    rect.left >= -100 &&
+                    rect.bottom <= (window.innerHeight + 100) &&
+                    rect.right <= (window.innerWidth + 100)
+                );
+
+                if (isVisible) {
+                    // Swarm the center with some randomness
+                    destX = rect.left + (rect.width / 2) + ((Math.random() - 0.5) * rect.width * 1.5); // Spread slightly wider than the box
+                    destY = rect.top + (rect.height / 2) + ((Math.random() - 0.5) * rect.height * 1.5);
+                } else {
+                    // Fallback if target is off-screen
+                    // We must set destX/destY here to avoid undefined usage later if we fall through
+                    destX = Math.random() * window.innerWidth;
+                    destY = Math.random() * window.innerHeight;
+                }
+            }
+            // NORMAL LANDING LOGIC
+            else if (spots.length > 0 && Math.random() > 0.1) { // 90% chance to land on element
                 // Smart Distribution: Use index to round-robin through available spots
                 // For Special Butterfly, pick RANDOM spot to avoid getting stuck on a hidden first element
                 const spotIndex = isSpecial ? Math.floor(Math.random() * spots.length) : (index % spots.length);
@@ -214,7 +241,7 @@ const Butterfly = ({ isFlying, delay, mousePos, index, isSpecial, onClick }: { i
                 }
             });
         }
-    }, [isFlying, controls, rotateControls, index]);
+    }, [isFlying, controls, rotateControls, index, isHovered, attractionTarget]);
 
     // Mouse Interaction: Fly away slightly if mouse gets too close
     // Mouse Interaction: Fly away slightly if mouse gets too close
@@ -240,7 +267,7 @@ const Butterfly = ({ isFlying, delay, mousePos, index, isSpecial, onClick }: { i
         <motion.div
             initial={{ opacity: 0, scale: 0 }}
             animate={controls}
-            onHoverStart={() => { setIsHovered(true); controls.stop(); }} // Stop movement on hover to make clicking easier
+            onHoverStart={() => { setIsHovered(true); controls.stop(); rotateControls.stop(); }} // Stop movement on hover to make clicking easier
             onHoverEnd={() => { setIsHovered(false); }}
             whileHover={{ scale: isSpecial ? 1.5 : 1.2, zIndex: 100 }}
             onClick={onClick}
@@ -317,7 +344,7 @@ const Butterfly = ({ isFlying, delay, mousePos, index, isSpecial, onClick }: { i
     );
 };
 
-export function ButterflyBackground() {
+export function ButterflyBackground({ attractionTarget }: { attractionTarget?: HTMLElement | null }) {
     const [mounted, setMounted] = useState(false);
     const [isScrolling, setIsScrolling] = useState(false);
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -341,7 +368,7 @@ export function ButterflyBackground() {
 
         updateCount();
 
-        let scrollTimeout: NodeJS.Timeout;
+        let scrollTimeout: ReturnType<typeof setTimeout>;
 
         const handleScroll = () => {
             setIsScrolling(true);
@@ -383,6 +410,7 @@ export function ButterflyBackground() {
                         mousePos={mousePos}
                         isSpecial={i === 0}
                         onClick={i === 0 ? () => setShowMascotPopup(true) : undefined}
+                        attractionTarget={attractionTarget}
                     />
                 ))}
             </div>
