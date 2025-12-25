@@ -30,15 +30,22 @@ import {
   Mic,
   Image,
   Clock,
-  X
+  X,
+  ArrowLeft,
+  ArrowRight,
+  MessageCircle,
+  Send,
+  Lock
 } from "lucide-react";
-import { ThemeSection } from "@/components/ThemeSection";
 import { ButterflyBackground } from "@/components/ButterflyBackground";
+import { LazyImage } from "@/components/ui/LazyImage";
+import emailjs from "@emailjs/browser";
 
 function App() {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [selectedSpeaker, setSelectedSpeaker] = useState<{ name: string; role: string; topic: string; image: string; bio: string } | null>(null);
   const [selectedActivity, setSelectedActivity] = useState<{ title: string; description: string; image: string; timing: string; instruction: string; speaker?: string; isSurprise?: boolean } | null>(null);
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
 
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -48,6 +55,74 @@ function App() {
   });
 
   const [surpriseBoxRef, setSurpriseBoxRef] = useState<HTMLElement | null>(null);
+
+  const progressIndicatorRef = useRef<HTMLDivElement>(null);
+
+  // Voice Your Worries State
+  const [worryInput, setWorryInput] = useState("");
+  const [isSubmittingWorry, setIsSubmittingWorry] = useState(false);
+  const [worrySubmitted, setWorrySubmitted] = useState(false);
+
+  // Surprise Card Shake State
+  const [isShaking, setIsShaking] = useState(false);
+
+  const handleCardClick = (activity: any) => {
+    if (activity.isSurprise) {
+      // Vibrate for mobile
+      if (typeof navigator !== 'undefined' && navigator.vibrate) {
+        navigator.vibrate(200);
+      }
+
+      // Trigger shake animation
+      setIsShaking(true);
+      setTimeout(() => setIsShaking(false), 500);
+    } else {
+      setSelectedActivity(activity);
+    }
+  };
+
+  const handleWorrySubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!worryInput.trim()) return;
+
+    setIsSubmittingWorry(true);
+
+    // EmailJS Configuration
+    // TODO: Replace these with your actual EmailJS credentials
+    // Sign up at https://www.emailjs.com/
+    const serviceId = "YOUR_SERVICE_ID"; // e.g., 'service_xyz'
+    const templateId = "YOUR_TEMPLATE_ID"; // e.g., 'template_abc'
+    const publicKey = "YOUR_PUBLIC_KEY"; // e.g., 'user_123456'
+
+    // Template parameters to match your EmailJS template
+    const templateParams = {
+      message: worryInput,
+      to_email: "mindempowered.test@gmail.com", // This will be dynamic if you add a field, or fixed here
+      reply_to: "Anonymous"
+    };
+
+    emailjs.send(serviceId, templateId, templateParams, publicKey)
+      .then((response) => {
+        console.log('SUCCESS!', response.status, response.text);
+        setIsSubmittingWorry(false);
+        setWorrySubmitted(true);
+        setWorryInput("");
+        // Reset success message after 5 seconds
+        setTimeout(() => setWorrySubmitted(false), 5000);
+      }, (error) => {
+        console.log('FAILED...', error);
+        setIsSubmittingWorry(false);
+        // Fallback for demo/placeholder if keys aren't set
+        if (serviceId === "YOUR_SERVICE_ID") {
+          alert("EmailJS is not configured yet. Please update the serviceId, templateId, and publicKey in App.tsx. \n\nFor now, we'll simulate a success!");
+          setWorrySubmitted(true);
+          setWorryInput("");
+          setTimeout(() => setWorrySubmitted(false), 5000);
+        } else {
+          alert("Failed to send message. Please try again later.");
+        }
+      });
+  };
 
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 500], [0, 200]); // Moves down
@@ -63,6 +138,26 @@ function App() {
   const mapRotateX = useTransform(venueScrollProgress, [0, 1], [60, 0]);
   const mapScale = useTransform(venueScrollProgress, [0, 1], [0.8, 1]);
   const mapOpacity = useTransform(venueScrollProgress, [0, 0.8], [0, 1]);
+
+  const experienceScrollRef = useRef<HTMLDivElement>(null);
+
+  const handleScrollProgress = () => {
+    if (experienceScrollRef.current && progressIndicatorRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = experienceScrollRef.current;
+      const totalScroll = scrollWidth - clientWidth;
+      if (totalScroll > 0) {
+        const progress = (scrollLeft / totalScroll) * 100;
+        // Move the indicator (width 25% * 3 = 75% travel distance)
+        progressIndicatorRef.current.style.transform = `translateX(${progress * 3}%)`;
+      }
+    }
+  };
+
+  useEffect(() => {
+    handleScrollProgress();
+    window.addEventListener('resize', handleScrollProgress);
+    return () => window.removeEventListener('resize', handleScrollProgress);
+  }, []);
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -95,8 +190,17 @@ function App() {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+  useEffect(() => {
+    // Fallback for map loading state
+    const timer = setTimeout(() => setIsMapLoaded(true), 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <div className="w-full min-h-screen bg-gradient-to-b from-[#FFF8DC] to-white relative">
+    <div className="w-full min-h-screen bg-gradient-to-b from-[#FFF8DC] to-white relative overflow-x-hidden">
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:p-4 focus:bg-white focus:text-[#800020] focus:font-bold">
+        Skip to main content
+      </a>
       <ButterflyBackground attractionTarget={surpriseBoxRef} />
       {/* Top Navigation Bar */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[#800020]/95 backdrop-blur-md border-b border-[#D4AF37]/20">
@@ -104,7 +208,7 @@ function App() {
           <div className="flex items-center justify-between h-16">
             {/* Mind Empowered Header - Left Side */}
             <a href="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity">
-              <img src="/logo.jpeg" alt="Mind Empowered Logo" className="w-10 h-10 object-cover rounded-full border-2 border-[#D4AF37]" />
+              <LazyImage src="/images/brand/logo.jpeg" alt="Mind Empowered Logo" className="w-full h-full object-cover" wrapperClassName="w-10 h-10 rounded-full border-2 border-[#D4AF37]" />
               <span className="text-white font-bold text-lg tracking-wide">
                 MIND EMPOWERED
               </span>
@@ -114,85 +218,83 @@ function App() {
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-8">
               <a href="#home" className="text-white/90 hover:text-[#D4AF37] transition-colors font-medium">Home</a>
-              <a href="#why" className="text-white/90 hover:text-[#D4AF37] transition-colors font-medium">About</a>
               <a href="#activities" className="text-white/90 hover:text-[#D4AF37] transition-colors font-medium">Activities</a>
               <a href="#speakers" className="text-white/90 hover:text-[#D4AF37] transition-colors font-medium">Speakers</a>
-              <a href="#venue" className="text-white/90 hover:text-[#D4AF37] transition-colors font-medium">Venue</a>
               <a href="#gallery" className="text-white/90 hover:text-[#D4AF37] transition-colors font-medium">Gallery</a>
               <a href="#partnership" className="text-white/90 hover:text-[#D4AF37] transition-colors font-medium">Partners</a>
+              <a href="#contact" className="text-white/90 hover:text-[#D4AF37] transition-colors font-medium">Contact Us</a>
             </div>
 
             {/* Mobile Navigation */}
             <div className="md:hidden">
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" className="w-12 h-12 p-0 text-white hover:bg-white/10">
+                  <Button variant="ghost" className="w-12 h-12 p-0 text-white hover:bg-white/10" aria-label="Open Menu">
                     <Menu className="w-8 h-8" />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="bg-gradient-to-b from-[#800020]/90 to-[#4a0013]/90 backdrop-blur-md border-l border-[#D4AF37]/30 text-white p-0">
-                  <div className="flex flex-col h-full">
+                <SheetContent side="right" className="bg-gradient-to-b from-[#FFF8DC] to-[#FAEBD7] border-l border-[#800020]/20 text-[#800020] p-0 w-[85vw] sm:max-w-md shadow-2xl">
+                  {/* Subtle Pattern Background */}
+                  <div className="absolute inset-0 bg-white opacity-5 pointer-events-none mix-blend-multiply"></div>
+
+                  <div className="flex flex-col h-full relative z-10">
                     {/* Menu Header */}
-                    <div className="p-6 border-b border-[#D4AF37]/20 bg-black/10">
-                      <div className="flex items-center gap-3">
-                        <img src="/logo.jpeg" alt="Logo" className="w-10 h-10 rounded-full border border-[#D4AF37]" />
+                    <div className="p-8 pb-4 pt-12">
+                      <div className="flex items-center gap-4">
+                        <div className="relative">
+                          <div className="absolute inset-0 bg-[#D4AF37] blur-md opacity-20 rounded-full"></div>
+                          <LazyImage src="/images/brand/logo.jpeg" alt="Logo" className="w-full h-full object-cover" wrapperClassName="w-12 h-12 rounded-full border border-[#D4AF37]/50 relative z-10" />
+                        </div>
                         <div>
-                          <h2 className="font-bold text-lg tracking-wider text-white">DHRITI</h2>
-                          <p className="text-[10px] text-[#D4AF37] uppercase tracking-widest">Elevate Yourself</p>
+                          <h2 className="font-bold text-2xl tracking-[0.15em] text-[#800020]">DHRITI</h2>
+                          <p className="text-[10px] text-[#D4AF37] uppercase tracking-[0.3em] font-bold">Elevate Yourself</p>
                         </div>
                       </div>
+                      <Separator className="mt-6 bg-[#D4AF37]/10" />
                     </div>
 
                     {/* Menu Links */}
-                    <div className="flex-1 overflow-y-auto py-4">
-                      <nav className="flex flex-col">
-                        <a href="#home" className="flex items-center gap-4 px-6 py-4 text-white/90 hover:bg-white/10 hover:text-[#D4AF37] transition-all border-b border-[#D4AF37]/10 group">
-                          <Home className="w-5 h-5 text-[#D4AF37]/70 group-hover:text-[#D4AF37]" />
-                          <span className="font-medium text-lg">Home</span>
-                        </a>
-                        <a href="#why" className="flex items-center gap-4 px-6 py-4 text-white/90 hover:bg-white/10 hover:text-[#D4AF37] transition-all border-b border-[#D4AF37]/10 group">
-                          <Info className="w-5 h-5 text-[#D4AF37]/70 group-hover:text-[#D4AF37]" />
-                          <span className="font-medium text-lg">About</span>
-                        </a>
-                        <a href="#activities" className="flex items-center gap-4 px-6 py-4 text-white/90 hover:bg-white/10 hover:text-[#D4AF37] transition-all border-b border-[#D4AF37]/10 group">
-                          <Gamepad2 className="w-5 h-5 text-[#D4AF37]/70 group-hover:text-[#D4AF37]" />
-                          <span className="font-medium text-lg">Activities</span>
-                        </a>
-                        <a href="#speakers" className="flex items-center gap-4 px-6 py-4 text-white/90 hover:bg-white/10 hover:text-[#D4AF37] transition-all border-b border-[#D4AF37]/10 group">
-                          <Mic className="w-5 h-5 text-[#D4AF37]/70 group-hover:text-[#D4AF37]" />
-                          <span className="font-medium text-lg">Speakers</span>
-                        </a>
-                        <a href="#venue" className="flex items-center gap-4 px-6 py-4 text-white/90 hover:bg-white/10 hover:text-[#D4AF37] transition-all border-b border-[#D4AF37]/10 group">
-                          <MapPin className="w-5 h-5 text-[#D4AF37]/70 group-hover:text-[#D4AF37]" />
-                          <span className="font-medium text-lg">Venue</span>
-                        </a>
-                        <a href="#gallery" className="flex items-center gap-4 px-6 py-4 text-white/90 hover:bg-white/10 hover:text-[#D4AF37] transition-all border-b border-[#D4AF37]/10 group">
-                          <Image className="w-5 h-5 text-[#D4AF37]/70 group-hover:text-[#D4AF37]" />
-                          <span className="font-medium text-lg">Gallery</span>
-                        </a>
-                        <a href="#partnership" className="flex items-center gap-4 px-6 py-4 text-white/90 hover:bg-white/10 hover:text-[#D4AF37] transition-all border-b border-[#D4AF37]/10 group">
-                          <Handshake className="w-5 h-5 text-[#D4AF37]/70 group-hover:text-[#D4AF37]" />
-                          <span className="font-medium text-lg">Partners</span>
-                        </a>
+                    <div className="flex-1 px-8 py-2 overflow-hidden flex flex-col justify-center">
+                      <nav className="flex flex-col h-full justify-evenly">
+                        {[
+                          { name: "Home", href: "#home", icon: Home },
+                          { name: "Activities", href: "#activities", icon: Gamepad2 },
+                          { name: "Speakers", href: "#speakers", icon: Mic },
+                          { name: "Gallery", href: "#gallery", icon: Image },
+                          { name: "Partners", href: "#partnership", icon: Handshake },
+                          { name: "Contact Us", href: "#contact", icon: Mail },
+                        ].map((item, i) => (
+                          <a
+                            key={item.name}
+                            href={item.href}
+                            className="group flex items-center gap-5 py-2 text-[#800020]/70 hover:text-[#800020] transition-all duration-300 hover:translate-x-2 last:border-0"
+                            style={{ transitionDelay: `${i * 50}ms` }}
+                          >
+                            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-[#800020]/5 group-hover:bg-[#800020]/10 transition-colors shrink-0">
+                              <item.icon className="w-4 h-4 text-[#800020] transition-colors" />
+                            </span>
+                            <span className="text-xl font-bold tracking-wide group-hover:text-[#A0153E]">{item.name}</span>
+                            <span className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity text-[#D4AF37]">
+                              <Sparkles className="w-4 h-4" />
+                            </span>
+                          </a>
+                        ))}
                       </nav>
                     </div>
 
                     {/* Menu Footer */}
-                    <div className="p-6 border-t border-[#D4AF37]/20 bg-black/10">
-                      <div className="flex justify-center gap-6 mb-4">
-                        <a href="#" className="p-2 rounded-full bg-white/5 hover:bg-[#D4AF37] hover:text-[#800020] transition-colors">
-                          <Instagram className="w-5 h-5" />
-                        </a>
-                        <a href="#" className="p-2 rounded-full bg-white/5 hover:bg-[#D4AF37] hover:text-[#800020] transition-colors">
-                          <Linkedin className="w-5 h-5" />
-                        </a>
-                        <a href="#" className="p-2 rounded-full bg-white/5 hover:bg-[#D4AF37] hover:text-[#800020] transition-colors">
-                          <Mail className="w-5 h-5" />
-                        </a>
+                    <div className="p-8 pt-4">
+                      <div className="flex justify-between items-end border-t border-[#800020]/10 pt-6">
+                        <div className="flex gap-5">
+                          <a href="#" className="text-[#800020]/60 hover:text-[#D4AF37] transition-colors" aria-label="Follow us on Instagram"><Instagram className="w-5 h-5" /></a>
+                          <a href="#" className="text-[#800020]/60 hover:text-[#D4AF37] transition-colors" aria-label="Connect on LinkedIn"><Linkedin className="w-5 h-5" /></a>
+                          <a href="#" className="text-[#800020]/60 hover:text-[#D4AF37] transition-colors" aria-label="Send us an email"><Mail className="w-5 h-5" /></a>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-[#D4AF37] text-xs font-serif italic font-bold">February 14, 2026</p>
+                          <p className="text-[#800020]/40 text-[10px] mt-1 font-medium">Kerala, India</p>
+                        </div>
                       </div>
-                      <p className="text-center text-[#D4AF37]/60 text-xs tracking-wider">
-                        FEBRUARY 14, 2026
-                      </p>
                     </div>
                   </div>
                 </SheetContent>
@@ -202,7 +304,7 @@ function App() {
         </div>
       </nav>
 
-      <main className="w-full pt-0 md:pt-16">
+      <main id="main-content" className="w-full pt-0 md:pt-16" tabIndex={-1}>
         {/* Hero Section */}
         <section id="home" className="relative min-h-[100dvh] md:h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#800020] via-[#A0153E] to-[#5C0120]">
           {/* Mental Awareness Pattern Background - Neural Network / Connection */}
@@ -295,7 +397,7 @@ function App() {
           </motion.div>
 
           {/* Lotus Flowers */}
-          <motion.div className="absolute bottom-32 left-20 opacity-15 hidden lg:block" style={{ rotate, y: y1 }}>
+          <motion.div className="absolute bottom-32 left-4 md:left-20 opacity-15" style={{ rotate, y: y1 }}>
             <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
               <ellipse cx="40" cy="60" rx="8" ry="15" fill="#D4AF37" transform="rotate(-30 40 60)" />
               <ellipse cx="40" cy="60" rx="8" ry="15" fill="#D4AF37" transform="rotate(30 40 60)" />
@@ -306,7 +408,7 @@ function App() {
             </svg>
           </motion.div>
 
-          <motion.div className="absolute bottom-32 right-20 opacity-15 hidden lg:block" style={{ rotate, y: y1 }}>
+          <motion.div className="absolute bottom-32 right-4 md:right-20 opacity-15" style={{ rotate, y: y1 }}>
             <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
               <ellipse cx="40" cy="60" rx="8" ry="15" fill="#D4AF37" transform="rotate(-30 40 60)" />
               <ellipse cx="40" cy="60" rx="8" ry="15" fill="#D4AF37" transform="rotate(30 40 60)" />
@@ -337,7 +439,7 @@ function App() {
           </div>
 
           {/* Coconut Tree Silhouettes */}
-          <motion.div className="absolute bottom-0 left-0 opacity-10 hidden lg:block" style={{ y: y1 }}>
+          <motion.div className="absolute bottom-0 left-0 opacity-10" style={{ y: y1 }}>
             <svg width="120" height="200" viewBox="0 0 120 200" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect x="55" y="80" width="10" height="120" fill="#D4AF37" />
               <ellipse cx="60" cy="70" rx="25" ry="15" fill="#D4AF37" transform="rotate(-20 60 70)" />
@@ -346,7 +448,7 @@ function App() {
             </svg>
           </motion.div>
 
-          <motion.div className="absolute bottom-0 right-0 opacity-10 hidden lg:block" style={{ y: y1 }}>
+          <motion.div className="absolute bottom-0 right-0 opacity-10" style={{ y: y1 }}>
             <svg width="120" height="200" viewBox="0 0 120 200" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect x="55" y="80" width="10" height="120" fill="#D4AF37" />
               <ellipse cx="60" cy="70" rx="25" ry="15" fill="#D4AF37" transform="rotate(-20 60 70)" />
@@ -356,7 +458,7 @@ function App() {
           </motion.div>
 
           {/* Sparkling Dust Particles - Desktop Only */}
-          <div className="absolute inset-0 pointer-events-none hidden md:block">
+          <div className="absolute inset-0 pointer-events-none">
             {[...Array(20)].map((_, i) => (
               <motion.div
                 key={i}
@@ -391,7 +493,7 @@ function App() {
                 </p>
               </div>
 
-              <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold text-white tracking-tight">
+              <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-bold text-white tracking-tight">
                 Dhriti
               </h1>
 
@@ -455,8 +557,7 @@ function App() {
 
         {/* The Why Section */}
         <section id="why" className="py-20 md:py-32 bg-white">
-          {/* Theme of the Year Section */}
-          <ThemeSection />
+
 
           <div className="container mx-auto px-6">
             <motion.div
@@ -703,177 +804,193 @@ function App() {
               <p className="text-lg text-gray-700 max-w-2xl mx-auto mb-2">
                 Immersive activities designed to engage, inspire, and transform
               </p>
-              {/* Mobile Scroll Hint */}
-              <motion.p
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 1, duration: 1, repeat: Infinity, repeatType: "reverse" }}
-                className="text-sm text-[#D4AF37] font-semibold md:hidden flex items-center justify-center gap-1"
-              >
-                Swipe to explore <span className="text-lg">→</span>
-              </motion.p>
             </motion.div>
 
             {/* Activities Container - Horizontal scroll on mobile, Grid on desktop */}
-            <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 -mx-6 px-6 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-8 md:pb-0 md:mx-0 md:px-0 md:overflow-visible custom-scrollbar scroll-smooth scroll-pl-6">
-              {[
-                {
-                  image: "/empathy_walk.png",
-                  title: "Empathy Walk",
-                  description: "Step into someone else's shoes through guided journeys that build understanding and compassion for diverse mental health experiences.",
-                  timing: "9:00 AM - 10:00 AM",
-                  instruction: "Meet at the main entrance. Comfortable walking shoes recommended.",
-                  speaker: "Community Guides"
-                },
-                {
-                  image: "/voice_worries.png",
-                  title: "Voice Your Worries",
-                  description: "Anonymous sharing spaces where you can express concerns freely, realizing you're not alone in your struggles.",
-                  timing: "11:00 AM - 12:00 PM",
-                  instruction: "Confidentiality assured. Facilitated by trained counselors.",
-                  speaker: "Counseling Team"
-                },
-                {
-                  image: "/art_therapy.png",
-                  title: "Art Therapy Workshop",
-                  description: "Express emotions through creative mediums - painting, sculpting, and crafting your way to self-discovery and healing.",
-                  timing: "10:00 AM - 11:30 AM",
-                  instruction: "All materials provided. Wear clothes you don't mind getting messy!",
-                  speaker: "Sarah Arts"
-                },
-                {
-                  image: "/wellness_games.png",
-                  title: "Mental Health Wellness Games",
-                  description: "Gamified learning experiences that make understanding mental health fun, interactive, and accessible to all ages.",
-                  timing: "12:00 PM - 2:00 PM",
-                  instruction: "Team participation encouraged. Suitable for all age groups.",
-                  speaker: "Game Master Jay"
-                },
-                {
-                  image: "/dance_therapy.png",
-                  title: "Dance Therapy",
-                  description: "Move, express, and heal through rhythm and movement in sessions blending traditional Kerala dance with therapeutic practices.",
-                  timing: "3:00 PM - 4:30 PM",
-                  instruction: "Comfortable clothing recommended. No prior dance experience required.",
-                  speaker: "Reshmi Nair"
-                },
-                {
-                  isSurprise: true,
-                  title: "A Surprise Event",
-                  description: "It's a surprise event. Join us to find out!",
-                  timing: "TBA",
-                  instruction: "Keep an eye on our social media channels!",
-                  image: ""
-                }
-              ].map((activity, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="min-w-[70vw] md:min-w-0 snap-start"
-                  ref={activity.isSurprise ? setSurpriseBoxRef : undefined}
-                >
+            {/* Activities Container - Horizontal scroll on mobile, Grid on desktop */}
+            <div className="relative group/carousel">
+              <div
+                ref={experienceScrollRef}
+                onScroll={handleScrollProgress}
+                className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 px-6 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-8 md:pb-0 md:px-0 md:overflow-visible scrollbar-hide scroll-smooth"
+              >
+                {[
+                  // ... cards ...
+                  {
+                    image: "/images/activities/empathy_walk.png",
+                    title: "Empathy Walk",
+                    description: "Step into someone else's shoes through guided journeys that build understanding and compassion for diverse mental health experiences.",
+                    timing: "9:00 AM - 10:00 AM",
+                    instruction: "Meet at the main entrance. Comfortable walking shoes recommended.",
+                    speaker: "Community Guides"
+                  },
+                  {
+                    image: "/images/activities/voice_worries.png",
+                    title: "Voice Your Worries",
+                    description: "Anonymous sharing spaces where you can express concerns freely, realizing you're not alone in your struggles.",
+                    timing: "11:00 AM - 12:00 PM",
+                    instruction: "Confidentiality assured. Facilitated by trained counselors.",
+                    speaker: "Counseling Team"
+                  },
+                  {
+                    image: "/images/activities/art_therapy.png",
+                    title: "Art Therapy Workshop",
+                    description: "Express emotions through creative mediums - painting, sculpting, and crafting your way to self-discovery and healing.",
+                    timing: "10:00 AM - 11:30 AM",
+                    instruction: "All materials provided. Wear clothes you don't mind getting messy!",
+                    speaker: "Sarah Arts"
+                  },
+                  {
+                    image: "/images/activities/wellness_games.png",
+                    title: "Mental Health Wellness Games",
+                    description: "Gamified learning experiences that make understanding mental health fun, interactive, and accessible to all ages.",
+                    timing: "12:00 PM - 2:00 PM",
+                    instruction: "Team participation encouraged. Suitable for all age groups.",
+                    speaker: "Game Master Jay"
+                  },
+                  {
+                    image: "/images/activities/dance_therapy.png",
+                    title: "Dance Therapy",
+                    description: "Move, express, and heal through rhythm and movement in sessions blending traditional Kerala dance with therapeutic practices.",
+                    timing: "3:00 PM - 4:30 PM",
+                    instruction: "Comfortable clothing recommended. No prior dance experience required.",
+                    speaker: "Reshmi Nair"
+                  },
+                  {
+                    title: "A Surprise Event",
+                    description: "It's a surprise event. Join us to find out!",
+                    timing: "TBA",
+                    instruction: "Keep an eye on our social media channels!",
+                    image: "",
+                    isSurprise: true
+                  }
+                ].map((activity, index) => (
                   <motion.div
-                    initial={{ scale: 0.9, rotate: 0 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    whileHover={activity.isSurprise ? { rotate: [0, -3, 3, -3, 3, 0], transition: { duration: 2, repeat: Infinity, ease: "easeInOut" } } : { scale: 1.05 }}
-                    className="group cursor-pointer h-full"
+                    key={index}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="w-[280px] xs:w-[300px] sm:w-[320px] md:w-auto md:min-w-0 snap-center shrink-0"
+                    ref={activity.isSurprise ? setSurpriseBoxRef : undefined}
                   >
-                    <Card className={`h-full overflow-hidden border-2 transition-all duration-300 flex flex-col active:scale-95 relative ${activity.isSurprise ? 'bg-gradient-to-br from-[#4a0013] via-[#800020] to-[#4a0013] border-[#FFD700] shadow-[0_0_30px_rgba(128,0,32,0.4)]' : 'bg-white border-[#D4AF37]/20 hover:border-[#D4AF37]'}`}>
-                      {/* Ribbons for Surprise Card - Cover Entire Card */}
-                      {/* Ribbons for Surprise Card - Cover Entire Card */}
-                      {activity.isSurprise && (
-                        <>
-                          {/* Vertical Ribbon */}
-                          <div className="absolute inset-y-0 left-1/2 w-8 -translate-x-1/2 bg-gradient-to-b from-[#FFD700]/30 via-[#FFD700]/10 to-[#FFD700]/30 border-x border-[#FFD700]/50 shadow-[0_0_15px_rgba(255,215,0,0.3)] pointer-events-none z-0">
-                            <div className="absolute inset-0 bg-white/20 animate-pulse" />
-                          </div>
-                          {/* Horizontal Ribbon - Moved to upper third (lid style) */}
-                          <div className="absolute inset-x-0 top-[35%] h-8 -translate-y-1/2 bg-gradient-to-r from-[#FFD700]/30 via-[#FFD700]/10 to-[#FFD700]/30 border-y border-[#FFD700]/50 shadow-[0_0_15px_rgba(255,215,0,0.3)] pointer-events-none z-0">
-                            <div className="absolute inset-0 bg-white/20 animate-pulse" />
-                          </div>
-                          {/* Central Butterfly Bow */}
-                          <div className="absolute top-[35%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none">
-                            <motion.svg
-                              width="80"
-                              height="60"
-                              viewBox="0 0 80 60"
-                              fill="none"
-                              className="drop-shadow-[0_4px_8px_rgba(0,0,0,0.3)] filter brightness-110 w-16 h-12 md:w-20 md:h-16"
-                              animate={{ scale: [1, 1.05, 1] }}
-                              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                            >
-                              {/* Left Loop (Butterfly Wing Shape) */}
-                              <path d="M40 30 C 20 10, 0 10, 5 30 C 10 45, 30 35, 40 30" fill="url(#goldGradient)" filter="url(#glow)" />
-                              {/* Right Loop (Butterfly Wing Shape) */}
-                              <path d="M40 30 C 60 10, 80 10, 75 30 C 70 45, 50 35, 40 30" fill="url(#goldGradient)" filter="url(#glow)" />
+                    <motion.div
+                      initial={{ scale: 0.9, rotate: 0 }}
+                      animate={activity.isSurprise && isShaking ? {
+                        x: [-5, 5, -5, 5, 0],
+                        transition: { duration: 0.4 }
+                      } : { scale: 1, rotate: 0 }}
+                      whileHover={activity.isSurprise ? { rotate: [0, -3, 3, -3, 3, 0], transition: { duration: 2, repeat: Infinity, ease: "easeInOut" } } : { scale: 1.05 }}
+                      onClick={() => handleCardClick(activity)}
+                      className="group cursor-pointer h-full"
+                    >
+                      <Card className={`h-full overflow-hidden border-2 transition-all duration-300 flex flex-col active:scale-95 relative ${activity.isSurprise ? 'bg-gradient-to-br from-[#4a0013] via-[#800020] to-[#4a0013] border-[#FFD700] shadow-[0_0_30px_rgba(128,0,32,0.4)]' : 'bg-white border-[#D4AF37]/20 hover:border-[#D4AF37]'}`}>
+                        {/* Ribbons for Surprise Card - Cover Entire Card */}
+                        {activity.isSurprise && (
+                          <>
+                            {/* Vertical Ribbon */}
+                            <div className="absolute inset-y-0 left-1/2 w-8 -translate-x-1/2 bg-gradient-to-b from-[#FFD700]/30 via-[#FFD700]/10 to-[#FFD700]/30 border-x border-[#FFD700]/50 shadow-[0_0_15px_rgba(255,215,0,0.3)] pointer-events-none z-0">
+                              <div className="absolute inset-0 bg-white/20 animate-pulse" />
+                            </div>
+                            {/* Horizontal Ribbon - Moved to upper third (lid style) */}
+                            <div className="absolute inset-x-0 top-[35%] h-8 -translate-y-1/2 bg-gradient-to-r from-[#FFD700]/30 via-[#FFD700]/10 to-[#FFD700]/30 border-y border-[#FFD700]/50 shadow-[0_0_15px_rgba(255,215,0,0.3)] pointer-events-none z-0">
+                              <div className="absolute inset-0 bg-white/20 animate-pulse" />
+                            </div>
+                            {/* Central Butterfly Bow */}
+                            <div className="absolute top-[35%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none">
+                              <motion.svg
+                                width="80"
+                                height="60"
+                                viewBox="0 0 80 60"
+                                fill="none"
+                                className="drop-shadow-[0_4px_8px_rgba(0,0,0,0.3)] filter brightness-110 w-16 h-12 md:w-20 md:h-16"
+                                animate={{ scale: [1, 1.05, 1] }}
+                                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                              >
+                                {/* Left Loop (Butterfly Wing Shape) */}
+                                <path d="M40 30 C 20 10, 0 10, 5 30 C 10 45, 30 35, 40 30" fill="url(#goldGradientSurprise)" filter="url(#glowSurprise)" />
+                                {/* Right Loop (Butterfly Wing Shape) */}
+                                <path d="M40 30 C 60 10, 80 10, 75 30 C 70 45, 50 35, 40 30" fill="url(#goldGradientSurprise)" filter="url(#glowSurprise)" />
 
-                              {/* Tails */}
-                              <path d="M40 30 Q 30 50 20 55" stroke="url(#goldGradient)" strokeWidth="4" strokeLinecap="round" />
-                              <path d="M40 30 Q 50 50 60 55" stroke="url(#goldGradient)" strokeWidth="4" strokeLinecap="round" />
+                                {/* Tails */}
+                                <path d="M40 30 Q 30 50 20 55" stroke="url(#goldGradientSurprise)" strokeWidth="4" strokeLinecap="round" />
+                                <path d="M40 30 Q 50 50 60 55" stroke="url(#goldGradientSurprise)" strokeWidth="4" strokeLinecap="round" />
 
-                              {/* Center Knot */}
-                              <circle cx="40" cy="30" r="5" fill="#FFE4B5" stroke="#B8860B" strokeWidth="1" />
+                                {/* Center Knot */}
+                                <circle cx="40" cy="30" r="5" fill="#FFE4B5" stroke="#B8860B" strokeWidth="1" />
 
-                              <defs>
-                                <linearGradient id="goldGradient" x1="0" y1="0" x2="0" y2="1">
-                                  <stop offset="0%" stopColor="#FFD700" />
-                                  <stop offset="50%" stopColor="#B8860B" />
-                                  <stop offset="100%" stopColor="#FFD700" />
-                                </linearGradient>
-                                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                                  <feGaussianBlur stdDeviation="2" result="blur" />
-                                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                                </filter>
-                              </defs>
-                            </motion.svg>
-                          </div>
-                        </>
-                      )}
-
-                      <div className={`h-48 overflow-hidden flex items-center justify-center relative z-10 ${activity.isSurprise ? 'bg-[#800020]/20' : ''}`}>
-                        {activity.isSurprise ? (
-                          <div className="relative w-full h-full flex items-center justify-center">
-                            <Sparkles className="absolute -top-4 -right-4 w-8 h-8 text-white animate-pulse" />
-                          </div>
-                        ) : (
-                          <img
-                            src={activity.image}
-                            alt={activity.title}
-                            className="w-full h-full object-cover transition-transform duration-500 md:group-hover:scale-110"
-                            onError={(e) => {
-                              const target = e.target as HTMLImageElement;
-                              if (target.src.includes('.jpeg')) {
-                                target.src = target.src.replace('.jpeg', '.png');
-                              } else if (target.src.includes('.png')) {
-                                target.src = target.src.replace('.png', '.jpeg');
-                              } else if (target.src.includes('.jpg')) {
-                                target.src = target.src.replace('.jpg', '.png');
-                              }
-                            }}
-                          />
+                                <defs>
+                                  <linearGradient id="goldGradientSurprise" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stopColor="#FFD700" />
+                                    <stop offset="50%" stopColor="#B8860B" />
+                                    <stop offset="100%" stopColor="#FFD700" />
+                                  </linearGradient>
+                                  <filter id="glowSurprise" x="-20%" y="-20%" width="140%" height="140%">
+                                    <feGaussianBlur stdDeviation="2" result="blur" />
+                                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                                  </filter>
+                                </defs>
+                              </motion.svg>
+                            </div>
+                          </>
                         )}
-                      </div>
-                      <CardHeader className="relative z-10">
-                        <CardTitle className={`${activity.isSurprise ? 'text-[#FFD700]' : 'text-[#800020]'} text-xl`}>{activity.title}</CardTitle>
-                      </CardHeader>
-                      <CardContent className="flex-grow flex flex-col relative z-10">
-                        <p className={`${activity.isSurprise ? 'text-[#FFE4B5]' : 'text-gray-600'} mb-4 flex-grow`}>{activity.description}</p>
-                        <Button
-                          onClick={() => setSelectedActivity(activity)}
-                          disabled={activity.isSurprise}
-                          className={`w-full ${activity.isSurprise ? 'bg-[#FFD700]/50 text-[#800020]/70 cursor-not-allowed border border-[#800020]/20' : 'bg-[#800020] hover:bg-[#A0153E] text-white active:scale-95'} mt-4 transition-all`}
-                          size="sm"
-                        >
-                          {activity.isSurprise ? 'Coming Soon...' : 'View Event'}
-                        </Button>
-                      </CardContent>
-                    </Card>
+
+                        <div className={`h-48 overflow-hidden flex items-center justify-center relative z-10 ${activity.isSurprise ? 'bg-[#800020]/20' : ''}`}>
+                          {activity.isSurprise ? (
+                            <div className="relative w-full h-full flex items-center justify-center">
+                              <Sparkles className="absolute -top-4 -right-4 w-8 h-8 text-white animate-pulse" />
+                            </div>
+                          ) : (
+                            <LazyImage
+                              src={activity.image}
+                              alt={activity.title}
+                              className="w-full h-full object-cover transition-transform duration-500 md:group-hover:scale-110"
+                              wrapperClassName="w-full h-full"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                if (target.src.includes('.jpeg')) {
+                                  target.src = target.src.replace('.jpeg', '.png');
+                                } else if (target.src.includes('.png')) {
+                                  target.src = target.src.replace('.png', '.jpeg');
+                                } else if (target.src.includes('.jpg')) {
+                                  target.src = target.src.replace('.jpg', '.png');
+                                }
+                              }}
+                            />
+                          )}
+                        </div>
+                        <CardHeader className="relative z-10 text-center pb-2">
+                          <CardTitle className={`${activity.isSurprise ? 'text-[#FFD700]' : 'text-[#800020]'} text-xl`}>{activity.title}</CardTitle>
+                        </CardHeader>
+                        <CardContent className="flex-grow flex flex-col relative z-10 text-center">
+                          <p className={`${activity.isSurprise ? 'text-[#FFE4B5]' : 'text-gray-600'} mb-4 flex-grow`}>{activity.description}</p>
+                          <Button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleCardClick(activity);
+                            }}
+                            className={`w-full ${activity.isSurprise ? 'bg-[#FFD700]/50 text-[#800020] border border-[#800020]/20' : 'bg-[#800020] hover:bg-[#A0153E] text-white active:scale-95'} mt-4 transition-all rounded-full font-semibold tracking-wide`}
+                            size="sm"
+                          >
+                            {activity.isSurprise ? 'Coming Soon...' : 'View Event'}
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
                   </motion.div>
-                </motion.div>
-              ))}
+                ))}
+              </div>
+
+              {/* Mobile Scroll Progress Slider */}
+              <div className="flex md:hidden justify-center mt-6 px-12">
+                <div className="h-1 bg-[#800020]/10 rounded-full w-48 overflow-hidden relative">
+                  <div
+                    ref={progressIndicatorRef}
+                    className="absolute top-0 left-0 h-full bg-[#800020] rounded-full w-1/4 will-change-transform"
+                    style={{ transform: 'translateX(0%)' }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -887,28 +1004,34 @@ function App() {
                   exit={{ opacity: 0 }}
                   onClick={() => setSelectedActivity(null)}
                   className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                  aria-hidden="true"
                 />
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9, y: 20 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.9, y: 20 }}
                   className="bg-white rounded-3xl overflow-hidden max-w-2xl w-full shadow-2xl relative z-10 flex flex-col"
+                  role="dialog"
+                  aria-modal="true"
+                  aria-labelledby="activity-title"
                 >
                   <button
                     onClick={() => setSelectedActivity(null)}
                     className="absolute top-4 right-4 p-2 bg-black/10 hover:bg-black/20 rounded-full transition-colors z-20"
+                    aria-label="Close modal"
                   >
                     <X className="w-6 h-6 text-[#800020]" />
                   </button>
 
                   <div className="h-48 md:h-64 overflow-hidden relative">
-                    <img
+                    <LazyImage
                       src={selectedActivity.image}
                       alt={selectedActivity.title}
                       className="w-full h-full object-cover"
+                      wrapperClassName="w-full h-full"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-6">
-                      <h3 className="text-3xl font-bold text-white shadow-black drop-shadow-md">{selectedActivity.title}</h3>
+                      <h3 id="activity-title" className="text-3xl font-bold text-white shadow-black drop-shadow-md">{selectedActivity.title}</h3>
                     </div>
                   </div>
 
@@ -959,6 +1082,12 @@ function App() {
 
 
 
+
+
+
+
+
+
         {/* Speakers & Artistes Section */}
         <section id="speakers" className="py-20 md:py-32 bg-[#FAF9F6] overflow-hidden" >
           <div className="container mx-auto px-6 mb-16">
@@ -981,93 +1110,32 @@ function App() {
           <div className="relative">
 
 
-            <div className="flex overflow-hidden group">
-              {/* Mobile: Horizontal Manual Scroll */}
-              <div className="md:hidden flex overflow-x-auto snap-x snap-mandatory gap-6 px-6 pb-8 w-full custom-scrollbar scroll-smooth">
-                {[
-                  {
-                    image: "/speaker_psychologist.png",
-                    name: "Dr. Anjali Menon",
-                    role: "Clinical Psychologist",
-                    topic: "Decoding Emotions"
-                  },
-                  {
-                    image: "/speaker_dancer.png",
-                    name: "Reshma Nair",
-                    role: "Contemporary Dancer",
-                    topic: "Healing Through Movement"
-                  },
-                  {
-                    image: "/speaker_activist.png",
-                    name: "Adv. Manoj Krishna",
-                    role: "Social Activist",
-                    topic: "Community Mental Health"
-                  },
-                  {
-                    image: "/speaker_author.png",
-                    name: "Sarah Joseph",
-                    role: "Author & Speaker",
-                    topic: "Stories that Heal"
-                  }
-                ].map((speaker, index) => (
-                  <div
-                    key={index}
-                    onClick={() => setSelectedSpeaker({ ...speaker, bio: "A visionary leader dedicated to mental wellness and community empowerment. With years of experience in their field, they bring unique insights and practical tools to help you navigate life's challenges." })}
-                    className="min-w-[70vw] shrink-0 bg-white rounded-2xl overflow-hidden shadow-xl border border-gray-100 snap-center cursor-pointer active:scale-95 transition-transform"
-                  >
-                    <div className="h-64 overflow-hidden relative">
-                      <img
-                        src={speaker.image}
-                        alt={speaker.name}
-                        className="w-full h-full object-cover"
-                        loading="lazy"
-                      />
-                    </div>
-                    <div className="p-6 text-center">
-                      <h3 className="text-xl font-bold text-[#800020] mb-1">{speaker.name}</h3>
-                      <p className="text-[#D4AF37] font-medium text-sm mb-3 uppercase tracking-wider">{speaker.role}</p>
-                      <div className="inline-block px-3 py-1 bg-[#800020]/5 rounded-full text-xs text-gray-600">
-                        Speaking on: {speaker.topic}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Desktop: Auto Scroll Carousel */}
-              <motion.div
-                className="hidden md:flex gap-8 px-8"
-                animate={{ x: [0, -1000] }}
-                transition={{
-                  duration: 25,
-                  repeat: Infinity,
-                  ease: "linear",
-                  repeatType: "loop"
-                }}
-              >
+            {/* Endless Scroll Carousel - Responsive Infinite Loop */}
+            <div className="relative w-full overflow-hidden group">
+              <div className="flex w-max animate-marquee pause-on-hover px-4">
                 {[...Array(2)].map((_, setIndex) => (
-                  <div key={setIndex} className="flex gap-8">
+                  <div key={setIndex} className="flex gap-8 pr-8">
                     {[
                       {
-                        image: "/speaker_psychologist.png",
+                        image: "/images/speakers/speaker_psychologist.png",
                         name: "Dr. Anjali Menon",
                         role: "Clinical Psychologist",
                         topic: "Decoding Emotions"
                       },
                       {
-                        image: "/speaker_dancer.png",
+                        image: "/images/speakers/speaker_dancer.png",
                         name: "Reshmi Nair",
                         role: "Contemporary Dancer",
                         topic: "Healing Through Movement"
                       },
                       {
-                        image: "/speaker_activist.png",
+                        image: "/images/speakers/speaker_activist.png",
                         name: "Adv. Manoj Krishna",
                         role: "Social Activist",
                         topic: "Community Mental Health"
                       },
                       {
-                        image: "/speaker_author.png",
+                        image: "/images/speakers/speaker_author.png",
                         name: "Sarah Joseph",
                         role: "Author & Speaker",
                         topic: "Stories that Heal"
@@ -1076,14 +1144,14 @@ function App() {
                       <div
                         key={index}
                         onClick={() => setSelectedSpeaker({ ...speaker, bio: "A visionary leader dedicated to mental wellness and community empowerment. With years of experience in their field, they bring unique insights and practical tools to help you navigate life's challenges." })}
-                        className="w-[300px] shrink-0 bg-white rounded-2xl overflow-hidden shadow-xl border border-gray-100 hover:border-[#D4AF37] transition-all duration-300 group-hover:pause cursor-pointer hover:shadow-2xl"
+                        className="w-[280px] xs:w-[300px] md:w-[320px] shrink-0 bg-white rounded-2xl overflow-hidden shadow-xl border border-gray-100 hover:border-[#D4AF37] transition-all duration-300 cursor-pointer hover:shadow-2xl hover:scale-[1.02]"
                       >
                         <div className="h-64 overflow-hidden relative group/image">
-                          <img
+                          <LazyImage
                             src={speaker.image}
                             alt={speaker.name}
-                            className="w-full h-full object-cover transition-transform duration-500 md:hover:scale-110"
-                            loading="lazy"
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover/image:scale-110"
+                            wrapperClassName="w-full h-full"
                           />
                           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/image:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                             <span className="text-white font-medium border border-white/50 px-4 py-2 rounded-full backdrop-blur-sm">View Bio</span>
@@ -1100,7 +1168,7 @@ function App() {
                     ))}
                   </div>
                 ))}
-              </motion.div>
+              </div>
             </div>
           </div>
 
@@ -1114,16 +1182,21 @@ function App() {
                   exit={{ opacity: 0 }}
                   onClick={() => setSelectedSpeaker(null)}
                   className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                  aria-hidden="true"
                 />
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9, y: 20 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.9, y: 20 }}
                   className="bg-white rounded-3xl overflow-hidden max-w-4xl w-full shadow-2xl relative z-10 flex flex-col md:flex-row"
+                  role="dialog"
+                  aria-modal="true"
+                  aria-labelledby="speaker-name"
                 >
                   <button
                     onClick={() => setSelectedSpeaker(null)}
                     className="absolute top-4 right-4 p-2 bg-black/10 hover:bg-black/20 rounded-full transition-colors z-20"
+                    aria-label="Close modal"
                   >
                     <svg className="w-6 h-6 text-[#800020]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -1147,7 +1220,7 @@ function App() {
                   {/* Modal Content */}
                   <div className="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-center bg-white">
                     <div className="hidden md:block mb-6">
-                      <h3 className="text-4xl font-bold text-[#800020] mb-2">{selectedSpeaker.name}</h3>
+                      <h3 id="speaker-name" className="text-4xl font-bold text-[#800020] mb-2">{selectedSpeaker.name}</h3>
                       <p className="text-xl text-[#D4AF37] font-medium tracking-wide uppercase">{selectedSpeaker.role}</p>
                     </div>
 
@@ -1218,7 +1291,13 @@ function App() {
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                   className="grayscale-0 md:grayscale md:group-hover:grayscale-0 transition-all duration-700"
+                  onLoad={() => setIsMapLoaded(true)}
                 />
+                {!isMapLoaded && (
+                  <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center z-10">
+                    <MapPin className="w-12 h-12 text-gray-300 animate-bounce" />
+                  </div>
+                )}
                 <div className="absolute inset-0 pointer-events-none border-[12px] border-[#800020]/10" />
               </motion.div>
 
@@ -1278,9 +1357,9 @@ function App() {
             {/* Gallery Grid/Slider */}
             <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 -mx-6 px-6 md:grid md:grid-cols-3 md:gap-6 md:pb-0 md:mx-0 md:px-0 custom-scrollbar scroll-smooth">
               {[
-                { src: "/gallery1.jpeg", alt: "Community Workshop", caption: "Community Workshops" },
-                { src: "/gallery2.jpeg", alt: "Art Therapy", caption: "Expressive Art Therapy" },
-                { src: "/gallery3.jpeg", alt: "Dance Movement", caption: "Cultural Wellness" }
+                { src: "/images/gallery/gallery1.jpeg", alt: "Community Workshop", caption: "Community Workshops" },
+                { src: "/images/gallery/gallery2.jpeg", alt: "Art Therapy", caption: "Expressive Art Therapy" },
+                { src: "/images/gallery/gallery3.jpeg", alt: "Dance Movement", caption: "Cultural Wellness" }
               ].map((img, index) => (
                 <motion.div
                   key={index}
@@ -1297,11 +1376,11 @@ function App() {
                   "
                 >
                   <div className="h-48 md:h-full w-full overflow-hidden rounded-t-2xl md:rounded-2xl">
-                    <img
+                    <LazyImage
                       src={img.src}
                       alt={img.alt}
-                      loading="lazy"
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      wrapperClassName="w-full h-full"
                     />
                   </div>
 
@@ -1505,6 +1584,153 @@ function App() {
 
 
 
+        {/* Voice Your Worries - Anonymous Query Section - Moved to Bottom */}
+        <section id="contact" className="py-24 md:py-40 bg-[#fffaf0] border-y border-[#D4AF37]/10 relative overflow-hidden">
+          {/* Decorative Background Elements */}
+          <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+            {/* Abstract shapes for calming effect */}
+            <motion.div
+              animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
+              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute top-[10%] left-[5%] text-[#800020]/5"
+            >
+              <Heart className="w-64 h-64" fill="currentColor" />
+            </motion.div>
+            <motion.div
+              animate={{ y: [0, 20, 0], rotate: [0, -5, 0] }}
+              transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+              className="absolute bottom-[10%] right-[5%] text-[#D4AF37]/5"
+            >
+              <Shield className="w-80 h-80" fill="currentColor" />
+            </motion.div>
+
+            <div className="absolute top-[-10%] left-[-5%] w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(212,175,55,0.05),transparent_70%)]"></div>
+          </div>
+
+          <div className="container mx-auto px-4 md:px-6 relative z-10">
+            <div className="max-w-6xl mx-auto bg-white rounded-3xl md:rounded-[2.5rem] shadow-2xl overflow-hidden border border-[#D4AF37]/20 flex flex-col md:flex-row min-h-0 md:min-h-[600px]">
+
+              {/* Left Side - Context */}
+              <div className="md:w-5/12 bg-gradient-to-br from-[#800020] to-[#5C0120] p-8 md:p-16 text-white flex flex-col justify-between relative overflow-hidden">
+                <div className="absolute inset-0 bg-black/10 opacity-10 mix-blend-overlay"></div>
+
+                {/* Floating Illustrations */}
+                <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
+                  <MessageCircle className="w-64 h-64 -mr-10 -mt-10" />
+                </div>
+                <motion.div
+                  animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.6, 0.3] }}
+                  transition={{ duration: 4, repeat: Infinity }}
+                  className="absolute bottom-20 right-10"
+                >
+                  <Sparkles className="w-12 h-12 text-[#FFD700]" />
+                </motion.div>
+
+                <div className="relative z-10 h-full flex flex-col justify-center">
+                  <div className="inline-flex items-center self-start gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[#FFD700] text-sm font-bold uppercase tracking-wider mb-8 shadow-sm">
+                    <Lock className="w-4 h-4" /> Anonymous & Safe
+                  </div>
+
+                  <h3 className="text-3xl md:text-5xl font-bold mb-4 md:mb-6 leading-tight">
+                    Voice Your <br />
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFD700] to-[#FFE4B5]">Worries</span>
+                  </h3>
+
+                  <p className="text-white/80 leading-relaxed text-lg mb-8 max-w-md">
+                    We understand that some things are hard to say out loud. Here, you have a safe space to share your burdens, ask questions, or simply let it out—without judgment, without names.
+                  </p>
+
+                  <div className="mt-auto pt-8 border-t border-white/10">
+                    <p className="text-white/60 text-sm italic flex items-center gap-3">
+                      <span className="w-8 h-[1px] bg-[#FFD700]"></span>
+                      "Speaking is the first step towards healing."
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Side - Form */}
+              <div className="md:w-7/12 p-6 md:p-16 bg-white flex flex-col justify-center relative">
+                {/* Subtle background decoration for form area */}
+                <div className="absolute top-0 right-0 w-40 h-40 bg-[#D4AF37]/5 rounded-bl-[100%] pointer-events-none"></div>
+
+                {worrySubmitted ? (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="text-center py-10"
+                  >
+                    <div className="w-24 h-24 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ type: "spring", stiffness: 200, damping: 10 }}
+                      >
+                        <Sparkles className="w-12 h-12 text-green-600" />
+                      </motion.div>
+                    </div>
+                    <h4 className="text-3xl font-bold text-[#800020] mb-4">Message Received</h4>
+                    <p className="text-gray-600 text-lg max-w-md mx-auto">
+                      Thank you for trusting us with your thoughts. Your voice matters, and you've taken a brave step today.
+                    </p>
+                    <Button
+                      variant="outline"
+                      className="mt-8 border-[#800020] text-[#800020] hover:bg-[#800020]/5"
+                      onClick={() => setWorrySubmitted(false)}
+                    >
+                      Send Another Message
+                    </Button>
+                  </motion.div>
+                ) : (
+                  <form onSubmit={handleWorrySubmit} className="space-y-8">
+                    <div>
+                      <label htmlFor="worry" className="block text-base font-bold text-[#800020] uppercase tracking-wide mb-4 flex items-center gap-2">
+                        What's on your mind?
+                        <span className="text-xs font-normal text-gray-400 normal-case ml-auto">(100% Anonymous)</span>
+                      </label>
+                      <div className="relative group">
+                        <textarea
+                          id="worry"
+                          value={worryInput}
+                          onChange={(e) => setWorryInput(e.target.value)}
+                          placeholder="Type your question, concern, or thought here... \n(e.g., 'I feel overwhelmed by everything lately', 'How do I support a friend who is struggling?')"
+                          className="w-full h-40 md:h-56 p-4 md:p-6 rounded-2xl bg-gray-50 border-2 border-gray-100 group-hover:border-gray-200 focus:border-[#D4AF37] focus:ring-4 focus:ring-[#D4AF37]/10 focus:bg-white transition-all duration-300 resize-none text-gray-700 placeholder:text-gray-400 text-base md:text-lg leading-relaxed shadow-sm"
+                          required
+                        ></textarea>
+                        <div className="absolute bottom-4 right-4 pointer-events-none">
+                          <MessageCircle className="w-5 h-5 text-gray-300" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row items-center justify-end gap-6 pt-2">
+                      <p className="text-xs text-gray-400 flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
+                        <Lock className="w-3 h-3" /> Your privacy is protected
+                      </p>
+                      <Button
+                        type="submit"
+                        disabled={isSubmittingWorry || !worryInput.trim()}
+                        className="w-full sm:w-auto bg-[#800020] hover:bg-[#600018] text-white px-8 py-5 md:px-10 md:py-7 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 disabled:opacity-70 disabled:grayscale disabled:hover:translate-y-0"
+                      >
+                        {isSubmittingWorry ? (
+                          <span className="flex items-center gap-3">
+                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                            Sending...
+                          </span>
+                        ) : (
+                          <span className="flex items-center gap-3">
+                            Send Anonymously <Send className="w-5 h-5" />
+                          </span>
+                        )}
+                      </Button>
+                    </div>
+                  </form>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Footer/Contact Section */}
         <footer className="bg-gradient-to-b from-[#800020] to-[#5C0120] text-white py-8 md:py-16" >
           {/* Kerala Pattern Divider */}
@@ -1600,11 +1826,11 @@ function App() {
       <AnimatePresence>
         {showScrollTop && (
           <motion.button
-            initial={{ opacity: 0, scale: 0.8 }}
+            initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
+            exit={{ opacity: 0, scale: 0 }}
             onClick={scrollToTop}
-            className="fixed bottom-8 right-8 z-50 p-4 bg-[#D4AF37] hover:bg-[#C4A137] text-[#800020] rounded-full shadow-2xl border-2 border-white hover:scale-110 transition-all duration-300"
+            className="fixed bottom-6 right-6 z-40 p-3 bg-[#800020] text-white rounded-full shadow-lg hover:bg-[#A0153E] transition-colors focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
             aria-label="Scroll to top"
           >
             <ArrowUp className="w-6 h-6" />

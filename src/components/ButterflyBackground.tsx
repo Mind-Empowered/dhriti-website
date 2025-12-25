@@ -16,7 +16,7 @@ const getLandingSpots = () => {
 
         const rect = el.getBoundingClientRect();
         return (
-            rect.top >= 50 &&
+            rect.top >= 90 &&
             rect.left >= 20 &&
             rect.bottom <= (window.innerHeight - 50) &&
             rect.right <= (window.innerWidth - 20) &&
@@ -54,7 +54,7 @@ const Butterfly = ({ isFlying, delay, mousePos, index, isSpecial, onClick, attra
 
     // Physics-based movement for mouse interaction
     const initialX = isSpecial && typeof window !== 'undefined' ? window.innerWidth / 2 + (Math.random() * 200 - 100) : Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000);
-    const initialY = isSpecial && typeof window !== 'undefined' ? window.innerHeight / 2 + (Math.random() * 200 - 100) : Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1000);
+    const initialY = isSpecial && typeof window !== 'undefined' ? window.innerHeight / 2 + (Math.random() * 200 - 100) : 90 + Math.random() * (typeof window !== 'undefined' ? window.innerHeight - 90 : 900);
 
     const x = useMotionValue(initialX);
     const y = useMotionValue(initialY);
@@ -145,9 +145,9 @@ const Butterfly = ({ isFlying, delay, mousePos, index, isSpecial, onClick, attra
                 ],
                 y: [
                     null,
-                    Math.random() * window.innerHeight,
-                    Math.random() * window.innerHeight,
-                    Math.random() * window.innerHeight
+                    90 + Math.random() * (window.innerHeight - 90),
+                    90 + Math.random() * (window.innerHeight - 90),
+                    90 + Math.random() * (window.innerHeight - 90)
                 ],
                 opacity: 0.9,
                 scale: isSpecial ? 1 : 1.1,
@@ -211,26 +211,26 @@ const Butterfly = ({ isFlying, delay, mousePos, index, isSpecial, onClick, attra
 
                 } else {
                     destX = Math.random() * window.innerWidth;
-                    destY = Math.random() * window.innerHeight;
+                    destY = 90 + Math.random() * (window.innerHeight - 90);
                 }
             } else {
                 // Land anywhere
                 destX = Math.random() * window.innerWidth;
-                destY = Math.random() * window.innerHeight;
+                destY = 90 + Math.random() * (window.innerHeight - 90);
             }
 
-            // SAFETY CHECK: If landing spot is on text, force it to screen edges
-            if (isOverlappingText(destX, destY)) {
+            // SAFETY CHECK: If landing spot is on text or in restricted top zone, force it to screen edges
+            if (destY < 90 || isOverlappingText(destX, destY)) {
                 const side = Math.floor(Math.random() * 4);
                 const buffer = isSpecial ? 70 : 30; // Increased buffer for Mascot
                 switch (side) {
                     case 0: // Top
                         destX = Math.random() * window.innerWidth;
-                        destY = buffer;
+                        destY = 90 + buffer;
                         break;
                     case 1: // Right
                         destX = window.innerWidth - buffer;
-                        destY = Math.random() * window.innerHeight;
+                        destY = 90 + Math.random() * (window.innerHeight - 90);
                         break;
                     case 2: // Bottom
                         destX = Math.random() * window.innerWidth;
@@ -238,7 +238,7 @@ const Butterfly = ({ isFlying, delay, mousePos, index, isSpecial, onClick, attra
                         break;
                     case 3: // Left
                         destX = buffer;
-                        destY = Math.random() * window.innerHeight;
+                        destY = 90 + Math.random() * (window.innerHeight - 90);
                         break;
                 }
             }
@@ -448,45 +448,78 @@ export function ButterflyBackground({ attractionTarget }: { attractionTarget?: H
                     onClick={() => setShowMascotPopup(false)}
                 >
                     <motion.div
-                        initial={{ scale: 0.9, y: 20 }}
-                        animate={{ scale: 1, y: 0 }}
-                        className="bg-white rounded-3xl p-8 max-w-md w-full relative shadow-2xl border-2 border-[#D4AF37]"
+                        initial={{ scale: 0.9, y: 20, opacity: 0 }}
+                        animate={{ scale: 1, y: 0, opacity: 1 }}
+                        exit={{ scale: 0.95, y: 10, opacity: 0 }}
+                        className="bg-gradient-to-b from-[#FFFDF5] to-[#FFF8DC] rounded-[2rem] p-8 md:p-10 max-w-md w-full relative shadow-[0_10px_40px_-10px_rgba(128,0,32,0.2)] border-2 border-[#D4AF37]/30 overflow-hidden"
                         onClick={(e) => e.stopPropagation()}
                     >
+                        {/* Decorative Background Elements */}
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-[#D4AF37]/5 rounded-bl-full pointer-events-none" />
+                        <div className="absolute bottom-0 left-0 w-24 h-24 bg-[#800020]/5 rounded-tr-full pointer-events-none" />
+
                         <button
                             onClick={() => setShowMascotPopup(false)}
-                            className="absolute top-4 right-4 text-gray-400 hover:text-[#800020] transition-colors"
+                            className="absolute top-4 right-4 p-2 text-gray-400 hover:text-[#800020] hover:bg-[#800020]/5 rounded-full transition-colors z-20"
                         >
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                         </button>
 
-                        <div className="flex flex-col items-center text-center space-y-4">
-                            <div className="w-20 h-20 bg-gradient-to-br from-[#FFF8DC] to-[#FFE4B5] rounded-full flex items-center justify-center border-2 border-[#D4AF37] shadow-inner mb-2 relative">
-                                <div className="absolute inset-0 bg-[#FFD700] blur-xl opacity-20 animate-pulse rounded-full"></div>
-                                <svg width="40" height="40" viewBox="0 0 50 50" fill="none">
+                        <div className="flex flex-col items-center text-center space-y-6 relative z-10">
+                            {/* Animated Butterfly Container */}
+                            <motion.div
+                                className="w-24 h-24 bg-white rounded-full flex items-center justify-center border border-[#D4AF37]/20 shadow-[0_8px_16px_rgba(212,175,55,0.15)] relative mb-2"
+                                animate={{
+                                    y: [0, -5, 0],
+                                    boxShadow: [
+                                        "0 8px 16px rgba(212,175,55,0.15)",
+                                        "0 15px 25px rgba(212,175,55,0.25)",
+                                        "0 8px 16px rgba(212,175,55,0.15)"
+                                    ]
+                                }}
+                                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                            >
+                                <motion.div
+                                    className="absolute inset-0 bg-[#FFD700] blur-xl opacity-20 rounded-full"
+                                    animate={{ opacity: [0.2, 0.4, 0.2], scale: [1, 1.1, 1] }}
+                                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                                />
+                                <motion.svg
+                                    width="48"
+                                    height="48"
+                                    viewBox="0 0 50 50"
+                                    fill="none"
+                                    animate={{
+                                        scale: [1, 1.1, 1],
+                                        rotate: [-2, 2, -2]
+                                    }}
+                                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                                >
                                     <path d="M25 25 C 15 15, 5 15, 10 30 C 5 45, 20 45, 25 25" fill="#FF69B4" opacity="0.6" />
                                     <path d="M25 25 C 35 15, 45 15, 40 30 C 45 45, 30 45, 25 25" fill="#FF69B4" opacity="0.6" />
                                     <path d="M25 25 C 20 5, 5 5, 10 25 C 5 35, 20 35, 25 25" fill="#FFF0F5" stroke="#FF1493" strokeWidth="0.5" />
                                     <path d="M25 25 C 30 5, 45 5, 40 25 C 45 35, 30 35, 25 25" fill="#FFF0F5" stroke="#FF1493" strokeWidth="0.5" />
                                     <path d="M25 15 L25 35" stroke="#8B4513" strokeWidth="2" strokeLinecap="round" />
-                                </svg>
+                                </motion.svg>
+                            </motion.div>
+
+                            <div>
+                                <h3 className="text-3xl font-serif font-bold text-[#800020] mb-2 tracking-wide">Meet Our Mascot</h3>
+                                <div className="w-12 h-1 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent rounded-full mx-auto opacity-60"></div>
                             </div>
 
-                            <h3 className="text-2xl font-bold text-[#800020]">Meet Our Mascot</h3>
-                            <div className="w-16 h-1 bg-[#D4AF37] rounded-full"></div>
-
-                            <div className="text-gray-700 leading-relaxed text-sm md:text-base">
-                                <p className="mb-3">
-                                    The <strong>Butterfly</strong> symbolizes <span className="text-[#800020] font-semibold">transformation</span>, hope, and the resilience of the human spirit.
-                                </p>
+                            <div className="text-[#5D4037] leading-relaxed text-base font-light font-sans space-y-4">
                                 <p>
-                                    Just as a butterfly emerges from a cocoon, we believe in the power of every individual to rise, evolve, and find their wings. At Dhriti, we celebrate this journey of healing and growth.
+                                    The <span className="font-medium text-[#c4155a]">Butterfly</span> represents <span className="font-semibold text-[#800020]">transformation</span>, quiet resilience, and the beauty of evolution.
+                                </p>
+                                <p className="text-sm opacity-90">
+                                    Just as it emerges from a cocoon, we believe every individual has the power to rise, heal, and find their wings. At Dhriti, we celebrate this beautiful journey of growth.
                                 </p>
                             </div>
 
                             <button
                                 onClick={() => setShowMascotPopup(false)}
-                                className="mt-6 px-6 py-2 bg-[#800020] text-white rounded-full font-semibold hover:bg-[#A0153E] transition-colors shadow-lg active:scale-95"
+                                className="mt-4 px-8 py-2.5 bg-[#800020] text-white rounded-full font-medium tracking-wide hover:bg-[#A0153E] transition-all shadow-[0_4px_14px_rgba(128,0,32,0.3)] hover:shadow-[0_6px_20px_rgba(128,0,32,0.4)] active:scale-95 text-sm"
                             >
                                 Close
                             </button>

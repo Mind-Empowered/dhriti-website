@@ -5,7 +5,7 @@
 
 /* Base imports */
 @import "tailwindcss";
-@import "tw-animate-css";
+/* @import "tw-animate-css"; */
 
 /* Custom dark variant for targeting dark mode elements */
 @custom-variant dark (&:is(.dark *));
@@ -136,12 +136,21 @@
     @apply border-border outline-ring/50;
   }
 
-  body {
-    @apply bg-background text-foreground;
-  }
-
   html {
     scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    position: relative;
+    /* Respect Safe Area Insets for notched phones */
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }
 
@@ -176,6 +185,24 @@
 
 .animate-fade-in-up {
   animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+.pause-on-hover:hover {
+  animation-play-state: paused;
 }
 
 /* Custom Scrollbar for Horizontal Sliders */
@@ -238,4 +265,16 @@
 html {
   scrollbar-width: thin;
   scrollbar-color: #D4AF37 transparent;
+}
+
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
