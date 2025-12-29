@@ -1,30 +1,30 @@
 export const SPEAKERS_DATA = [
     {
-        image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
-        name: "Speaker Name",
-        role: "Designation",
-        topic: "Topic Title",
-        bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        image: "/images/speakers/speaker_psychologist.png",
+        name: "Fathima Beevi",
+        role: "Psychologist",
+        topic: "Self Love & Resilience",
+        bio: "Based in Ernakulam, Kalamassery, Fathima Beevi is an experienced psychologist dedicated to mental wellness. Her session on February 14th focuses on the transformative power of self-love and building resilience."
     },
     {
-        image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
+        image: "/images/speakers/speaker_activist.png",
         name: "Speaker Name",
-        role: "Designation",
-        topic: "Topic Title",
-        bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        role: "Social Activist",
+        topic: "Empowering Communities",
+        bio: "An advocate for social change and community mental health awareness."
     },
     {
-        image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
+        image: "/images/speakers/speaker_author.png",
         name: "Speaker Name",
-        role: "Designation",
-        topic: "Topic Title",
-        bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        role: "Author",
+        topic: "Healing through Words",
+        bio: "Exploring the intersections of literature, personal narrative, and psychological well-being."
     },
     {
-        image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
+        image: "/images/speakers/speaker_dancer.png",
         name: "Speaker Name",
-        role: "Designation",
-        topic: "Topic Title",
-        bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        role: "Performing Artist",
+        topic: "Motion and Emotion",
+        bio: "A professional dancer specializing in movement therapy and expressive arts."
     }
 ];

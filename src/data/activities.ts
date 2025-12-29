@@ -54,7 +54,7 @@ export const ACTIVITIES_DATA = [
         description: "Write a love letter to your present self or a hope-filled note to your future self.",
         timing: "1:30 PM - 2:30 PM",
         instruction: "Stationery provided.",
-        speaker: "Wellness Guides",
+        speaker: "Fathima Beevi",
         image: "/images/activities/writing.png"
     },
     {
