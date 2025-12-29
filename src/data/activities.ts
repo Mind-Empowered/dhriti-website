@@ -98,14 +98,7 @@ export const ACTIVITIES_DATA = [
         speaker: "Mystery Guest",
         image: "/images/activities/comedy.png"
     },
-    {
-        title: "Weave Your Mat",
-        description: "A therapeutic session of weaving, symbolizing the fabric of community support.",
-        timing: "Ongoing",
-        instruction: "Drop-in session.",
-        speaker: "Artisans",
-        image: "/images/activities/weaving.png"
-    },
+
     {
         title: "Comic Making",
         description: "Create your own stories and heroes through the medium of comics.",

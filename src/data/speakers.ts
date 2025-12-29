@@ -1,30 +1,30 @@
 export const SPEAKERS_DATA = [
     {
-        image: "/images/speakers/speaker_psychologist.png",
-        name: "Dr. Anjali Menon",
-        role: "Clinical Psychologist",
-        topic: "Decoding Emotions",
-        bio: "A visionary leader dedicated to mental wellness and community empowerment. With years of experience in their field, they bring unique insights and practical tools to help you navigate life's challenges."
+        image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
+        name: "Speaker Name",
+        role: "Designation",
+        topic: "Topic Title",
+        bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
     },
     {
-        image: "/images/speakers/speaker_dancer.png",
-        name: "Reshmi Nair",
-        role: "Contemporary Dancer",
-        topic: "Healing Through Movement",
-        bio: "A visionary leader dedicated to mental wellness and community empowerment. With years of experience in their field, they bring unique insights and practical tools to help you navigate life's challenges."
+        image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
+        name: "Speaker Name",
+        role: "Designation",
+        topic: "Topic Title",
+        bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
     },
     {
-        image: "/images/speakers/speaker_activist.png",
-        name: "Adv. Manoj Krishna",
-        role: "Social Activist",
-        topic: "Community Mental Health",
-        bio: "A visionary leader dedicated to mental wellness and community empowerment. With years of experience in their field, they bring unique insights and practical tools to help you navigate life's challenges."
+        image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
+        name: "Speaker Name",
+        role: "Designation",
+        topic: "Topic Title",
+        bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
     },
     {
-        image: "/images/speakers/speaker_author.png",
-        name: "Sarah Joseph",
-        role: "Author & Speaker",
-        topic: "Stories that Heal",
-        bio: "A visionary leader dedicated to mental wellness and community empowerment. With years of experience in their field, they bring unique insights and practical tools to help you navigate life's challenges."
+        image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
+        name: "Speaker Name",
+        role: "Designation",
+        topic: "Topic Title",
+        bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
     }
 ];

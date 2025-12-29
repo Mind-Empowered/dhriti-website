@@ -5,36 +5,40 @@ import { Button } from "@/components/ui/button";
 export function PartnershipSection() {
     const CURRENT_PARTNERS = [
         {
-            name: "Zenith Healthcare",
+            name: "Partner Name",
             role: "Title Sponsor",
             icon: HeartPulse,
-            color: "text-red-600",
-            bg: "bg-red-50",
-            border: "border-red-200"
+            color: "text-gray-800",
+            bg: "bg-gray-50",
+            border: "border-gray-200",
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam."
         },
         {
-            name: "EcoLife Kerala",
+            name: "Partner Name",
             role: "Sustainability Partner",
             icon: Leaf,
-            color: "text-green-600",
-            bg: "bg-green-50",
-            border: "border-green-200"
+            color: "text-gray-800",
+            bg: "bg-gray-50",
+            border: "border-gray-200",
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam."
         },
         {
-            name: "Metro Media",
+            name: "Partner Name",
             role: "Media Partner",
             icon: Tv,
-            color: "text-blue-600",
-            bg: "bg-blue-50",
-            border: "border-blue-200"
+            color: "text-gray-800",
+            bg: "bg-gray-50",
+            border: "border-gray-200",
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam."
         },
         {
-            name: "Urban Bites",
+            name: "Partner Name",
             role: "Food Partner",
             icon: Coffee,
-            color: "text-orange-600",
-            bg: "bg-orange-50",
-            border: "border-orange-200"
+            color: "text-gray-800",
+            bg: "bg-gray-50",
+            border: "border-gray-200",
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam."
         }
     ];
 
@@ -113,22 +117,37 @@ export function PartnershipSection() {
                                     viewport={{ once: true }}
                                     transition={{ duration: 0.4, delay: index * 0.1 }}
                                     className={`
-                                        ${partner.bg} border ${partner.border} 
-                                        rounded-2xl p-6 flex flex-col items-center justify-center 
-                                        text-center shadow-sm hover:shadow-md transition-all
-                                        group cursor-default
+                                        bg-white rounded-2xl p-6 flex flex-col items-center justify-center 
+                                        text-center shadow-lg hover:shadow-xl transition-all
+                                        border border-gray-100 hover:border-[#D4AF37]/30
+                                        group relative overflow-hidden
                                     `}
                                 >
-                                    <div className={`
-                                        w-16 h-16 rounded-full bg-white flex items-center justify-center 
-                                        mb-4 shadow-sm group-hover:scale-110 transition-transform duration-300
-                                    `}>
-                                        <partner.icon className={`w-8 h-8 ${partner.color}`} />
+                                    <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+                                        <partner.icon className="w-24 h-24 rotate-12" />
                                     </div>
-                                    <h4 className="font-bold text-gray-800 text-lg leading-tight mb-1">{partner.name}</h4>
-                                    <p className={`text-xs font-bold uppercase tracking-wider ${partner.color} opacity-80`}>
-                                        {partner.role}
-                                    </p>
+
+                                    <div className={`
+                                        w-20 h-20 rounded-full bg-gradient-to-br from-gray-50 to-gray-100 
+                                        flex items-center justify-center mb-4 shadow-inner 
+                                        border border-gray-200 group-hover:scale-110 transition-transform duration-500
+                                    `}>
+                                        <span className="text-xs text-gray-400 font-serif italic">Logo</span>
+                                    </div>
+
+                                    <div className="relative z-10">
+                                        <h4 className="font-bold text-gray-800 text-lg leading-tight mb-2 group-hover:text-[#800020] transition-colors">
+                                            {partner.name}
+                                        </h4>
+                                        <div className="inline-block px-3 py-1 rounded-full bg-gray-100 mb-3 group-hover:bg-[#800020]/5 transition-colors">
+                                            <p className={`text-[10px] font-bold uppercase tracking-widest ${partner.color}`}>
+                                                {partner.role}
+                                            </p>
+                                        </div>
+                                        <p className="text-xs text-gray-500 line-clamp-3 leading-relaxed px-2">
+                                            {partner.description}
+                                        </p>
+                                    </div>
                                 </motion.div>
                             ))}
                         </div>

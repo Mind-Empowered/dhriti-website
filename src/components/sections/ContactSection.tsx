@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Heart, MessageCircle, Sparkles, Send, ShieldCheck, HeartHandshake } from "lucide-react";
+import { Heart, MessageCircle, Sparkles, Send, ShieldCheck, HeartHandshake, Instagram, Linkedin, Mail } from "lucide-react";
 import { Button } from "../ui/button";
 
 export function ContactSection() {
@@ -94,6 +94,35 @@ export function ContactSection() {
                                     <p className="text-sm text-gray-500 mt-4">
                                         Secure Google Form
                                     </p>
+
+                                    {/* Social Media Links */}
+                                    <div className="flex items-center gap-6 mt-8">
+                                        <a
+                                            href="https://www.instagram.com/mind.empowered?igsh=bGNmYXI1czlrcDhi"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="p-3 rounded-full bg-white border border-[#800020]/10 text-[#800020] hover:bg-[#800020] hover:text-white transition-all duration-300 shadow-sm hover:shadow-md group"
+                                            aria-label="Instagram"
+                                        >
+                                            <Instagram className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                                        </a>
+                                        <a
+                                            href="https://www.linkedin.com/company/mind-empowered/posts/?feedView=all"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="p-3 rounded-full bg-white border border-[#800020]/10 text-[#800020] hover:bg-[#800020] hover:text-white transition-all duration-300 shadow-sm hover:shadow-md group"
+                                            aria-label="LinkedIn"
+                                        >
+                                            <Linkedin className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                                        </a>
+                                        <a
+                                            href="mailto:mindemowered2020@gmail.com"
+                                            className="p-3 rounded-full bg-white border border-[#800020]/10 text-[#800020] hover:bg-[#800020] hover:text-white transition-all duration-300 shadow-sm hover:shadow-md group"
+                                            aria-label="Email"
+                                        >
+                                            <Mail className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                                        </a>
+                                    </div>
                                 </div>
                             </motion.div>
                         </div>
