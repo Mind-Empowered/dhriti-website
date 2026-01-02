@@ -153,7 +153,7 @@ export function GallerySection() {
                                 image: "/images/gallery/jessica.jpeg"
                             },
                             {
-                                quote: "Earning your wings means surrendering everything you thought you were to become everything you are meant to be. Resilience is the trust we place in the air once we finally decide to spread them.",
+                                quote: "Earning your wings means surrendering everything you thought you were, to become everything you are meant to be. Resilience is the trust we place in the air once we finally decide to spread them.",
                                 author: "Abiram T Bijoy",
                                 role: "Technical Lead",
                                 image: "/images/gallery/abiram.jpeg"
