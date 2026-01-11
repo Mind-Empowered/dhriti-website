@@ -161,7 +161,7 @@ export function ContactSection() {
                             </div>
                             <div className="flex-1 bg-white relative">
                                 <iframe
-                                    src="https://docs.google.com/forms/d/e/1FAIpQLSdRdX19XoYFkuJq3yklwYireMzul6zZyRIF-oKlFEWxf3BG7A/viewform?embedded=true"
+                                    src="https://docs.google.com/forms/d/e/1FAIpQLSdzaQdiiuThyVTIRYfM68XLoZnsO6qD_imUqfq_9hB2AmB8qg/viewform?embedded=true"
                                     className="absolute inset-0 w-full h-full border-0"
                                     title="Feedback Form"
                                 >
