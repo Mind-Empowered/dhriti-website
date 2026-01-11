@@ -2,6 +2,31 @@ export const SURPRISE_REVEAL_DATE = new Date('2026-02-14T12:00:00');
 
 export const ACTIVITIES_DATA = [
     {
+        title: "Standup Comedy",
+        description: "I’ve never been to a festival for the mind, but I know our mind is the anchor of it all. To bring my wit and perform standup in Kerala's first mental health festival at Fort Kochi on the Valentine's day is an honour. All the best to the curators for doing this fabulous initiative",
+        timing: "6:00 PM - 7:00 PM",
+        instruction: "Get ready to laugh!",
+        isSurprise: true,
+        speaker: "Sreelakshmi Ushadevi",
+        image: "/images/speakers/speaker_standup.jpeg"
+    },
+    {
+        title: "Vanitha Police Self-Defence",
+        description: "A vital self-defence workshop empoweringly led by women officers of the Kerala Police, teaching practical safety techniques and situational awareness.",
+        timing: "Special Workshop",
+        instruction: "Open to all women participants. Wear comfortable attire.",
+        speaker: "Rethnamani.T.L (ASI), Lissy Mathai (ASI), Syama (CPO) & Jancy (CPO)",
+        image: "/images/activities/vanitha_police.png"
+    },
+    {
+        title: "Music Concert",
+        description: "Soul-stirring performances to uplift your spirit and end the day on a high note.",
+        timing: "7:00 PM Onwards",
+        instruction: "Main Stage.",
+        speaker: "Various Artistes",
+        image: "/images/activities/concert.png"
+    },
+    {
         title: "Empathy Walk",
         description: "Step into someone else's shoes through guided journeys that build understanding and compassion for diverse mental health experiences.",
         timing: "9:00 AM - 10:00 AM",
@@ -15,7 +40,7 @@ export const ACTIVITIES_DATA = [
         timing: "TBA",
         instruction: "Experience the power of focus and self-understanding.",
         speaker: "Dhanya P",
-        image: "/images/speakers/speaker_meditation.jpeg"
+        image: "/images/activities/meditation.png"
     },
     {
         title: "Sound Bath",
@@ -47,7 +72,7 @@ export const ACTIVITIES_DATA = [
         timing: "TBA",
         instruction: "All materials provided.",
         speaker: "Karthika Harilal",
-        image: "/images/speakers/speaker_clay.jpeg"
+        image: "/images/activities/clay_modeling.png"
     },
     {
         title: "Sign Language Workshop",
@@ -114,24 +139,6 @@ export const ACTIVITIES_DATA = [
         image: "/images/activities/cosplay.png"
     },
     {
-        title: "Vanitha Police Self-Defence",
-        description: "A vital self-defence workshop empoweringly led by women officers of the Kerala Police, teaching practical safety techniques and situational awareness.",
-        timing: "Special Workshop",
-        instruction: "Open to all women participants. Wear comfortable attire.",
-        speaker: "Rethnamani.T.L (ASI), Lissy Mathai (ASI), Syama (CPO) & Jancy (CPO)",
-        image: "/images/activities/vanitha_police.png"
-    },
-    {
-        title: "Standup Comedy",
-        description: "I’ve never been to a festival for the mind, but I know our mind is the anchor of it all. To bring my wit and perform standup in Kerala's first mental health festival at Fort Kochi on the Valentine's day is an honour. All the best to the curators for doing this fabulous initiative",
-        timing: "6:00 PM - 7:00 PM",
-        instruction: "Get ready to laugh!",
-        isSurprise: true,
-        speaker: "Sreelakshmi Ushadevi",
-        image: "/images/speakers/speaker_standup.jpeg"
-    },
-
-    {
         title: "Comic Making",
         description: "Create your own stories and heroes through the medium of comics.",
         timing: "Ongoing",
@@ -154,13 +161,5 @@ export const ACTIVITIES_DATA = [
         instruction: "Support by purchasing.",
         speaker: "Community Partners",
         image: "/images/activities/market.png"
-    },
-    {
-        title: "Music Concert",
-        description: "Soul-stirring performances to uplift your spirit and end the day on a high note.",
-        timing: "7:00 PM Onwards",
-        instruction: "Main Stage.",
-        speaker: "Various Artistes",
-        image: "/images/activities/concert.png"
     }
 ];

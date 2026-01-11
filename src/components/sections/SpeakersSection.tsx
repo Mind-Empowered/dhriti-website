@@ -77,7 +77,7 @@ export function SpeakersSection() {
                             viewport={{ once: true }}
                             transition={{ duration: 0.5, delay: index * 0.1 }}
                             onClick={() => setSelectedSpeaker(speaker)}
-                            className="relative flex-shrink-0 w-[300px] md:w-[340px] h-[500px] snap-center cursor-pointer group rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border-[6px] border-white ring-1 ring-gray-100"
+                            className="relative flex-shrink-0 w-[260px] md:w-[280px] h-[400px] snap-center cursor-pointer group rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-500 hover:-translate-y-2 border-[4px] border-white ring-1 ring-gray-100"
                         >
                             <LazyImage
                                 src={speaker.image}
@@ -93,17 +93,17 @@ export function SpeakersSection() {
                             <div className="absolute inset-0 border-2 border-[#D4AF37] opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl pointer-events-none" />
 
                             {/* Content */}
-                            <div className="absolute bottom-0 left-0 w-full p-8 transform transition-transform duration-300">
+                            <div className="absolute bottom-0 left-0 w-full p-6 transform transition-transform duration-300">
                                 <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                                    <p className="text-[#FFD700] font-bold tracking-widest text-xs uppercase mb-2 drop-shadow-md">
+                                    <p className="text-[#FFD700] font-bold tracking-widest text-[10px] uppercase mb-1 drop-shadow-md">
                                         {speaker.role}
                                     </p>
-                                    <h3 className="text-3xl font-bold text-white mb-3 drop-shadow-lg leading-tight">
+                                    <h3 className="text-2xl font-bold text-white mb-2 drop-shadow-lg leading-tight">
                                         {speaker.name}
                                     </h3>
-                                    <div className="h-[2px] w-0 group-hover:w-full bg-[#D4AF37] transition-all duration-500 ease-out mb-4 opacity-50"></div>
-                                    <p className="text-white/90 text-sm font-medium line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
-                                        <span className="text-[#FFD700] mr-2">✦</span> {speaker.topic}
+                                    <div className="h-[2px] w-0 group-hover:w-full bg-[#D4AF37] transition-all duration-500 ease-out mb-3 opacity-50"></div>
+                                    <p className="text-white/90 text-xs font-medium line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                                        <span className="text-[#FFD700] mr-1">✦</span> {speaker.topic}
                                     </p>
                                 </div>
                             </div>

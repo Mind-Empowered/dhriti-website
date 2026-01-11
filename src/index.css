@@ -269,13 +269,16 @@ html {
 }
 
 /* Hide scrollbar utility */
+
 .scrollbar-hide {
+  /* IE and legacy Edge */
   -ms-overflow-style: none;
-  /* IE and Edge */
+
+  /* Firefox and modern browsers (Chrome 121+, Safari 18+) */
   scrollbar-width: none;
-  /* Firefox */
 }
 
+/* Fallback for Chrome < 121, older Safari, and other WebKit browsers */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }

@@ -171,48 +171,44 @@ export function GallerySection() {
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                                className="min-w-[260px] md:min-w-[320px] snap-center"
+                                className="min-w-[260px] md:min-w-[300px] snap-center py-4"
                             >
-                                <Card className="h-full bg-white border border-[#D4AF37]/20 shadow-lg hover:shadow-xl transition-all duration-300 group rounded-xl">
-                                    <div className="p-6 flex flex-col h-full relative">
-                                        {/* Decorative Quote Mark */}
-                                        <div className="absolute top-4 right-4 opacity-10">
-                                            <Quote className="w-8 h-8 text-[#800020]" />
-                                        </div>
+                                <Card className="h-full bg-white border border-[#D4AF37]/20 shadow-md hover:shadow-xl transition-all duration-500 group rounded-3xl overflow-hidden flex flex-col items-center text-center relative hover:-translate-y-2">
+                                    <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-[#D4AF37] via-[#800020] to-[#D4AF37] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                                        <div className="mb-4">
-                                            <div className="flex gap-1">
-                                                {[...Array(5)].map((_, i) => (
-                                                    <span key={i} className="text-[#D4AF37] text-xs">★</span>
-                                                ))}
-                                            </div>
-                                        </div>
-
-                                        <p className="text-gray-600 italic font-serif leading-relaxed mb-6 text-sm md:text-base flex-grow">
-                                            "{testimonial.quote}"
-                                        </p>
-
-                                        <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
-                                            {testimonial.image ? (
-                                                <div
-                                                    className="w-10 h-10 rounded-full overflow-hidden shadow-md border border-[#D4AF37]/20 cursor-pointer hover:scale-110 transition-transform"
-                                                    onClick={() => setSelectedItem({ src: testimonial.image!, alt: testimonial.author, role: testimonial.role })}
-                                                >
+                                    <div className="pt-8 pb-4 px-4">
+                                        {testimonial.image ? (
+                                            <div
+                                                className="w-16 h-16 rounded-full p-0.5 border-2 border-[#D4AF37] shadow-sm cursor-pointer hover:shadow-[0_0_15px_rgba(212,175,55,0.4)] transition-all duration-300 mx-auto"
+                                                onClick={() => setSelectedItem({ src: testimonial.image!, alt: testimonial.author, role: testimonial.role })}
+                                            >
+                                                <div className="w-full h-full rounded-full overflow-hidden">
                                                     <img
                                                         src={testimonial.image}
                                                         alt={testimonial.author}
                                                         className="w-full h-full object-cover"
                                                     />
                                                 </div>
-                                            ) : (
-                                                <div className={cn("w-10 h-10 rounded-full flex items-center justify-center text-white font-serif font-bold text-sm shadow-md", (testimonial as any).color || "bg-[#800020]")}>
-                                                    {testimonial.author[0]}
-                                                </div>
-                                            )}
-                                            <div>
-                                                <h4 className="font-bold text-[#800020] text-sm">{testimonial.author}</h4>
-                                                <p className="text-xs text-gray-400 font-medium tracking-wide uppercase">{testimonial.role}</p>
                                             </div>
+                                        ) : (
+                                            <div className={cn("w-16 h-16 rounded-full flex items-center justify-center text-white font-serif font-bold text-xl shadow-sm mx-auto", (testimonial as any).color || "bg-[#800020]")}>
+                                                {testimonial.author[0]}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className="px-6 pb-8 flex flex-col flex-grow items-center">
+                                        <div className="mb-4 opacity-30">
+                                            <Quote className="w-6 h-6 text-[#800020] rotate-180" />
+                                        </div>
+
+                                        <p className="text-gray-700 italic font-medium leading-relaxed mb-6 flex-grow text-sm">
+                                            "{testimonial.quote}"
+                                        </p>
+
+                                        <div className="relative pt-4 border-t border-[#D4AF37]/10 w-full">
+                                            <h4 className="text-base font-bold text-[#800020] mb-0.5 font-serif tracking-tight">{testimonial.author}</h4>
+                                            <p className="text-[10px] text-[#D4AF37] font-bold tracking-[0.15em] uppercase">{testimonial.role}</p>
                                         </div>
                                     </div>
                                 </Card>

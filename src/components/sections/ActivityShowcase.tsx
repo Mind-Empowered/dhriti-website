@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { LazyImage } from "@/components/ui/LazyImage";
-import { Sparkles, X, Clock, Mic, Info, CalendarClock } from "lucide-react";
+import { Sparkles, X, Mic, Info } from "lucide-react";
 import { ACTIVITIES_DATA, SURPRISE_REVEAL_DATE } from "@/data/activities";
 
 interface ActivityShowcaseProps {
@@ -14,8 +14,9 @@ export function ActivityShowcase({ setSurpriseBoxRef }: ActivityShowcaseProps) {
     const [visibleActivitiesCount, setVisibleActivitiesCount] = useState(4);
     const [isSurpriseRevealed, setIsSurpriseRevealed] = useState(false);
     const [isShaking, setIsShaking] = useState(false);
-    const [showTimeline, setShowTimeline] = useState(false);
+
     const [selectedActivity, setSelectedActivity] = useState<{ title: string; description: string; image: string; timing: string; instruction: string; speaker?: string; isSurprise?: boolean } | null>(null);
+    const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
 
     useEffect(() => {
         const checkReveal = () => {
@@ -196,9 +197,7 @@ export function ActivityShowcase({ setSurpriseBoxRef }: ActivityShowcaseProps) {
                                         </div>
 
                                         <CardHeader className="relative z-10 text-center pb-2 pt-6 px-4">
-                                            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white border border-[#D4AF37] px-3 py-1 rounded-full text-xs font-bold text-[#800020] shadow-sm whitespace-nowrap z-20">
-                                                {displayActivity.timing}
-                                            </div>
+
                                             <CardTitle className={`leading-tight ${isLockedSurprise ? 'text-[#FFD700] text-2xl font-black tracking-wide drop-shadow-md' : 'text-[#800020] text-xl'}`}>
                                                 {displayActivity.title}
                                             </CardTitle>
@@ -225,109 +224,10 @@ export function ActivityShowcase({ setSurpriseBoxRef }: ActivityShowcaseProps) {
                     })}
                 </div>
 
-                <div className="flex flex-col md:flex-row justify-center gap-4 mt-8 pb-8">
-                    <Button
-                        onClick={() => setShowTimeline(true)}
-                        className="bg-[#D4AF37] text-[#800020] hover:bg-[#C4A137] border-2 border-[#D4AF37] px-8 py-6 rounded-full text-lg font-bold shadow-lg transition-all active:scale-95 flex items-center gap-2"
-                    >
-                        View Full Schedule <CalendarClock className="w-5 h-5" />
-                    </Button>
-                </div>
+
             </div>
 
-            {/* Timeline & Instructions Modal */}
-            <AnimatePresence>
-                {showTimeline && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            onClick={() => setShowTimeline(false)}
-                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-                            aria-hidden="true"
-                        />
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9, y: 30 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.9, y: 30 }}
-                            className="bg-[#FFF8DC] rounded-[2rem] overflow-hidden max-w-4xl w-full max-h-[85vh] shadow-2xl relative z-10 flex flex-col"
-                            role="dialog"
-                            aria-modal="true"
-                        >
-                            <div className="p-6 md:p-8 border-b border-[#D4AF37]/20 bg-white/50 backdrop-blur-md flex justify-between items-center sticky top-0 z-20">
-                                <div>
-                                    <h3 className="text-2xl md:text-3xl font-bold text-[#800020] flex items-center gap-3">
-                                        <CalendarClock className="w-8 h-8 text-[#D4AF37]" /> Festival Timeline
-                                    </h3>
-                                    <p className="text-gray-600 text-sm mt-1">February 14, 2026 • Kochi, Kerala</p>
-                                </div>
-                                <button
-                                    type="button"
-                                    onClick={() => setShowTimeline(false)}
-                                    className="p-2 bg-black/5 hover:bg-black/10 rounded-full transition-colors"
-                                    aria-label="Close timeline"
-                                    title="Close timeline"
-                                >
-                                    <X className="w-6 h-6 text-[#800020]" />
-                                </button>
-                            </div>
 
-                            <div className="overflow-y-auto p-6 md:p-10 space-y-12">
-                                {/* Timeline Section */}
-                                <div>
-                                    <h4 className="text-xl font-bold text-[#800020] mb-8 border-l-4 border-[#D4AF37] pl-4">Day Agenda</h4>
-                                    <div className="relative border-l-2 border-[#D4AF37]/30 ml-4 md:ml-6 space-y-8 md:space-y-10">
-                                        {[
-                                            { time: "09:00 AM", title: "Inauguration & Opening", desc: "Welcome keynote by Founders & Lighting the Lamp", icon: Sparkles },
-                                            { time: "10:00 AM", title: "Morning Wellness Sessions", desc: "Choose between Yoga for Anxiety or Art Therapy", icon: Clock },
-                                            { time: "12:00 PM", title: " grandeur Surprise Reveal!", desc: "The big moment we've been waiting for! Gather at the Main Stage.", highlight: true, icon: Sparkles },
-                                            { time: "01:00 PM", title: "Community Lunch", desc: "Networking and sharing a meal together", icon: Clock },
-                                            { time: "02:30 PM", title: "Interactive Workshops", desc: "Dance Movement Therapy & Group Circles", icon: Clock },
-                                            { time: "05:00 PM", title: "Closing Ceremony", desc: "Performances and final thoughts", icon: Sparkles },
-                                        ].map((item, idx) => (
-                                            <div key={idx} className="relative pl-8 md:pl-12 group">
-                                                <div className={`absolute -left-[9px] top-0 w-4 h-4 rounded-full border-2 ${item.highlight ? 'bg-[#FFD700] border-[#800020] w-6 h-6 -left-[13px] animate-pulse' : 'bg-[#FFF8DC] border-[#D4AF37]'} transition-all group-hover:scale-125`} />
-                                                <div className={`p-4 rounded-xl ${item.highlight ? 'bg-gradient-to-r from-[#800020] to-[#5C0120] text-white shadow-lg transform md:-translate-y-1' : 'bg-white border border-[#D4AF37]/20 hover:border-[#D4AF37] hover:shadow-md'} transition-all`}>
-                                                    <span className={`text-xs font-bold tracking-wider ${item.highlight ? 'text-[#FFD700]' : 'text-[#800020]'}`}>{item.time}</span>
-                                                    <h5 className={`text-lg font-bold mt-1 mb-1 ${item.highlight ? 'text-white' : 'text-gray-800'}`}>{item.title}</h5>
-                                                    <p className={`text-sm ${item.highlight ? 'text-white/80' : 'text-gray-600'}`}>{item.desc}</p>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* Instructions Section */}
-                                <div>
-                                    <h4 className="text-xl font-bold text-[#800020] mb-6 border-l-4 border-[#D4AF37] pl-4">Event Instructions</h4>
-                                    <div className="grid md:grid-cols-2 gap-4">
-                                        {[
-                                            "Please arrive 30 minutes prior to your first registered session.",
-                                            "Carry a valid ID proof for verification at the entrance.",
-                                            "Wear comfortable clothing suitable for movement activities.",
-                                            "Bring a water bottle to stay hydrated throughout the day.",
-                                            "Respect privacy: No photography in sensitive workshop areas.",
-                                            "Most importantly, bring an open heart and mind!"
-                                        ].map((instruction, i) => (
-                                            <div key={i} className="flex items-start gap-3 bg-white p-4 rounded-xl border border-[#D4AF37]/10">
-                                                <Info className="w-5 h-5 text-[#D4AF37] shrink-0 mt-0.5" />
-                                                <p className="text-gray-700 text-sm">{instruction}</p>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="p-6 border-t border-[#D4AF37]/20 bg-white/50 backdrop-blur-md flex justify-end">
-                                <Button onClick={() => setShowTimeline(false)} className="bg-[#800020] text-white hover:bg-[#600018]">
-                                    Close Schedule
-                                </Button>
-                            </div>
-                        </motion.div>
-                    </div>
-                )}
-            </AnimatePresence>
 
             {/* Activity Details Modal */}
             <AnimatePresence>
@@ -378,13 +278,7 @@ export function ActivityShowcase({ setSurpriseBoxRef }: ActivityShowcaseProps) {
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="bg-[#FAF9F6] p-4 rounded-xl border border-[#D4AF37]/20">
-                                        <div className="flex items-center gap-3 mb-2">
-                                            <Clock className="w-5 h-5 text-[#800020]" />
-                                            <h4 className="font-bold text-[#800020]">Timing</h4>
-                                        </div>
-                                        <p className="text-gray-600 font-medium">{selectedActivity.timing}</p>
-                                    </div>
+
 
                                     {selectedActivity.speaker && (
                                         <div className="bg-[#FAF9F6] p-4 rounded-xl border border-[#D4AF37]/20">
@@ -411,10 +305,58 @@ export function ActivityShowcase({ setSurpriseBoxRef }: ActivityShowcaseProps) {
                                         </span>
                                         <span className="text-gray-500">Free Registration</span>
                                     </div>
-                                    <Button className="w-full bg-[#800020] hover:bg-[#600018] text-white py-6 text-lg shadow-lg">
+                                    <Button
+                                        onClick={() => setIsRegistrationOpen(true)}
+                                        className="w-full bg-[#800020] hover:bg-[#600018] text-white py-6 text-lg shadow-lg"
+                                    >
                                         Register Now
                                     </Button>
                                 </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+            {/* Google Form Registration Modal */}
+            <AnimatePresence>
+                {isRegistrationOpen && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setIsRegistrationOpen(false)}
+                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                            aria-hidden="true"
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            className="bg-white rounded-2xl overflow-hidden w-full max-w-3xl h-[85vh] shadow-2xl relative z-10 flex flex-col"
+                            role="dialog"
+                            aria-modal="true"
+                        >
+                            <div className="flex justify-between items-center p-4 border-b border-[#D4AF37]/20 bg-[#FAF9F6]">
+                                <h3 className="text-xl font-bold text-[#800020] flex items-center gap-2">
+                                    <Sparkles className="w-5 h-5 text-[#D4AF37]" /> Register for Event
+                                </h3>
+                                <button
+                                    onClick={() => setIsRegistrationOpen(false)}
+                                    className="p-2 hover:bg-black/5 rounded-full transition-colors"
+                                    aria-label="Close registration"
+                                >
+                                    <X className="w-6 h-6 text-[#800020]" />
+                                </button>
+                            </div>
+                            <div className="flex-1 bg-white relative">
+                                <iframe
+                                    src="https://docs.google.com/forms/d/e/1FAIpQLSdRdX19XoYFkuJq3yklwYireMzul6zZyRIF-oKlFEWxf3BG7A/viewform?embedded=true"
+                                    className="absolute inset-0 w-full h-full border-0"
+                                    title="Registration Form"
+                                >
+                                    Loading...
+                                </iframe>
                             </div>
                         </motion.div>
                     </div>
