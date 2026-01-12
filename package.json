@@ -2,7 +2,7 @@
   "name": "dhriti",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://github.com/Mind-Empowered/dhrithi-website.git",
+  "homepage": "https://snehadilip1.github.io/dhrithi-website",
   "type": "module",
   "scripts": {
     "predeploy": "npm run build",
