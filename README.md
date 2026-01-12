@@ -32,9 +32,11 @@ Ensure you have the following installed on your machine:
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/JustRamm/Dhrithi.git
+   gh repo clone Mind-Empowered/dhrithi-website
    cd Dhrithi
    ```
+  
+   Ensure that you have the Github CLI installed
 
 2. **Install dependencies:**
    ```bash
