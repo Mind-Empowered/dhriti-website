@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
     "install-and-dev": "pnpm install && pnpm dev",
     "build": "vite build --mode development",
     "build:watch": "vite build --watch --mode development",
