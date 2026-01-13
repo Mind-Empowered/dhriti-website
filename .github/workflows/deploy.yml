@@ -32,11 +32,7 @@ jobs:
         # Runs the build script defined in package.json
         run: npm run build
 
-      - name: 5. Create CNAME for Custom Domain
-        # Creates the CNAME file required by GitHub Pages for your custom domain
-        run: echo "mind-empowered.org" > dist/CNAME
-
-      - name: 6. Deploy to GitHub Pages
+      - name: 5. Deploy to GitHub Pages
         # Uses the popular action to deploy the build output to the gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
         with:
