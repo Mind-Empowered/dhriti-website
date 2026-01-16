@@ -98,22 +98,7 @@ export const ACTIVITIES_DATA = [
         speaker: "Game Masters",
         image: "/images/activities/wellness_games.png"
     },
-    {
-        title: "Letters to Self",
-        description: "Write a love letter to your present self or a hope-filled note to your future self.",
-        timing: "1:30 PM - 2:30 PM",
-        instruction: "Stationery provided.",
-        speaker: "Fathima Beevi",
-        image: "/images/activities/writing.png"
-    },
-    {
-        title: "Blindfold Sharing Circle",
-        description: "Reflections on the past year, dreams for the future, and celebrating achievements in a judgement-free zone.",
-        timing: "2:30 PM - 3:30 PM",
-        instruction: "Safe environment assured.",
-        speaker: "Facilitators",
-        image: "/images/activities/circle.png"
-    },
+
     {
         title: "QPR Suicide Prevention",
         description: "Question, Persuade, Refer - Learn vital skills to help save a life.",
