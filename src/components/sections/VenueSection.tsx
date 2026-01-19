@@ -99,7 +99,7 @@ export function VenueSection() {
                             <div>
                                 <h3 className="text-2xl font-bold text-[#800020] mb-2">Easy Accessibility</h3>
                                 <p className="text-gray-600 leading-relaxed">
-                                    Well-connected by road and ferry services. Ample parking spaces will be identified near the venue.
+                                    Centrally located in Thamaraparambu, the park is easily accessible via T.M. Muhammed Road. Ample parking will be available nearby.
                                 </p>
                             </div>
                         </div>

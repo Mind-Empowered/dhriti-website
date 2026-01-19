@@ -187,11 +187,7 @@ export function SpeakersSection() {
                                         </p>
                                     </div>
 
-                                    <div className="pt-6 border-t border-gray-100">
-                                        <button className="text-[#800020] font-bold hover:text-[#D4AF37] transition-colors flex items-center gap-2 group">
-                                            View Session Details <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                                        </button>
-                                    </div>
+
                                 </div>
                             </div>
                         </motion.div>
