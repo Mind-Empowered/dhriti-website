@@ -2,18 +2,15 @@ name: Deploy React App to GitHub Pages
 
 on:
   # Runs on pushes targeting the 'deploy' branch
-  pull_request:
+  push:
     branches:
-      - master
-    types:
-      - closed 
+      - deploy
   
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
   build-and-deploy:
-    if: github.event.pull_request.merged == true
     name: Build and Deploy
     runs-on: ubuntu-latest
 
