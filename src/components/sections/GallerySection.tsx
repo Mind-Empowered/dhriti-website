@@ -21,7 +21,7 @@ export function GallerySection() {
     const galleryImages = [
         { src: "/images/gallery/gallery1.jpeg", alt: "Community Workshop", caption: "Safe Circles", desc: "Conversations that break the silence." },
         { src: "/images/gallery/gallery2.jpeg", alt: "Wellness Activities", caption: "Mindful Moments", desc: "Practicing the art of being present." },
-        { src: "/images/gallery/gallery3.jpeg", alt: "Festival Gathering", caption: "Dhriti Experience", desc: "A movement for mental wellness in Kerala." }
+        { src: "/images/gallery/gallery3.jpeg", alt: "Festival Gathering", caption: "Experiences", desc: "A movement for mental wellness in Kerala." }
     ];
 
     return (
@@ -163,6 +163,12 @@ export function GallerySection() {
                                 author: "Nakshatra P Nair",
                                 role: "Content & Editorial Lead",
                                 image: "/images/gallery/nakshatra.jpeg"
+                            },
+                            {
+                                quote: "In our journey to find ourselves, we get lost, unable to see ourselves in others. Like us, they are also going through the similar ups and downs of life. Dhriti is where you can meet the different versions of you - they can help you and you can help them.",
+                                author: "Vignesh N",
+                                role: "CEO, Mevitech",
+                                image: "/images/gallery/vignesh.jpeg"
                             }
                         ].map((testimonial, index) => (
                             <motion.div
@@ -283,7 +289,7 @@ export function GallerySection() {
                                 transition={{ delay: 0.3 }}
                                 className="mt-4 text-white/40 font-medium text-[10px] tracking-[0.2em] uppercase"
                             >
-                                Voices of Dhriti Experience
+                                Voices of Dhriti Experiences
                             </motion.p>
                         </motion.div>
                     </div>
