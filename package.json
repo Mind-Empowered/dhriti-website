@@ -5,6 +5,7 @@
   "homepage": "https://snehadilip1.github.io/dhriti-website",
   "type": "module",
   "scripts": {
+    "dev": "vite",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "install-and-dev": "pnpm install && pnpm dev",
