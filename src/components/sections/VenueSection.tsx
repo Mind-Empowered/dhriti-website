@@ -34,13 +34,10 @@ export function VenueSection() {
                         <span>Historic Location</span>
                     </div>
                     <h2 className="text-4xl md:text-5xl font-bold text-[#800020] mb-6">
-                        The Venue: Fort Kochi
+                        The Venue: Pallathuraman Memorial Park
                     </h2>
                     <p className="text-xl text-gray-700 max-w-2xl mx-auto mb-8">
-                        Immerse yourself in history and healing at the cultural heart of Kerala.
-                        <span className="block mt-2 font-semibold text-[#D4AF37]">
-                            *Precise festival grounds to be disclosed soon
-                        </span>
+                        Located in the heart of Thamaraparambu, Kochi, this historic park offers a serene environment blending cultural heritage with natural beauty.
                     </p>
                 </motion.div>
 
@@ -57,14 +54,14 @@ export function VenueSection() {
                         className="w-full h-[400px] rounded-3xl overflow-hidden shadow-2xl border-4 border-white relative group origin-top"
                     >
                         <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15715.68886367746!2d76.24233305!3d9.9634996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b086d2c1c696e59%3A0xe5a20af1b6a2df84!2sFort%20Kochi%2C%20Kochi%2C%20Kerala!5e0!3m2!1sen!2sin!4v1710000000000!5m2!1sen!2sin"
+                            title="Venue Location Map: Pallathuraman Memorial Park"
+                            src="https://maps.google.com/maps?q=Pallathuraman+Memorial+Park%2C+Thamaraparambu%2C+Kochi%2C+Kerala&t=&z=15&ie=UTF8&iwloc=&output=embed"
                             width="100%"
                             height="100%"
-                            style={{ border: 0 }}
+                            className="border-0 grayscale-0 md:grayscale md:group-hover:grayscale-0 transition-all duration-700"
                             allowFullScreen={true}
                             loading="lazy"
                             referrerPolicy="no-referrer-when-downgrade"
-                            className="grayscale-0 md:grayscale md:group-hover:grayscale-0 transition-all duration-700"
                             onLoad={() => setIsMapLoaded(true)}
                         />
                         {!isMapLoaded && (
@@ -90,7 +87,7 @@ export function VenueSection() {
                             <div>
                                 <h3 className="text-2xl font-bold text-[#800020] mb-2">Heritage Atmosphere</h3>
                                 <p className="text-gray-600 leading-relaxed">
-                                    Fort Kochi's colonial architecture and serene coastline provide the perfect backdrop for reflection and connection.
+                                    A symbol of resilience and heritage, the park provides a tranquil sanctuary for meditation, art, and community connection.
                                 </p>
                             </div>
                         </div>

@@ -3,7 +3,7 @@ export const SURPRISE_REVEAL_DATE = new Date('2026-02-14T12:00:00');
 export const ACTIVITIES_DATA = [
     {
         title: "Standup Comedy",
-        description: "I’ve never been to a festival for the mind, but I know our mind is the anchor of it all. To bring my wit and perform standup in Kerala's first mental health festival at Fort Kochi on the Valentine's day is an honour. All the best to the curators for doing this fabulous initiative",
+        description: "I’ve never been to a festival for the mind, but I know our mind is the anchor of it all. To bring my wit and perform standup in Kerala's first mental health festival at Pallathuraman Memorial Park on the Valentine's day is an honour. All the best to the curators for doing this fabulous initiative",
         timing: "6:00 PM - 7:00 PM",
         instruction: "Get ready to laugh!",
         isSurprise: true,

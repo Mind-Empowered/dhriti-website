@@ -28,7 +28,7 @@ export function FAQSection() {
                         },
                         {
                             q: "Where is the festival taking place?",
-                            a: "The festival will be held at the central grounds in Kochi. Detailed venue maps and transportation guides will be shared closer to the event date."
+                            a: "The festival will be held at Pallathuraman Memorial Park, Thamaraparambu, Kochi. Detailed venue maps and accessibility guides are available in the Venue section."
                         },
                         {
                             q: "How can I volunteer?",
