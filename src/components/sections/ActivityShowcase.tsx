@@ -221,15 +221,17 @@ export function ActivityShowcase({ setSurpriseBoxRef }: ActivityShowcaseProps) {
                                             <p className={`text-sm ${isLockedSurprise ? 'text-[#FFE4B5] font-medium' : 'text-gray-600'} mb-6 flex-grow line-clamp-3`}>
                                                 {displayActivity.description}
                                             </p>
-                                            <Button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleCardClick(activity);
-                                                }}
-                                                className={`w-full ${isLockedSurprise ? 'bg-gradient-to-r from-[#FFD700] to-[#B8860B] hover:from-[#FFE4B5] hover:to-[#D4AF37] text-[#800020] font-bold border-none shadow-lg' : 'bg-transparent border-2 border-[#800020] text-[#800020] hover:bg-[#800020] hover:text-white'} mt-auto transition-all rounded-xl py-6 tracking-wide text-sm active:scale-95`}
-                                            >
-                                                {isLockedSurprise ? 'Reveal Magic ✨' : 'View Details'}
-                                            </Button>
+                                            {!isLockedSurprise && (
+                                                <Button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleCardClick(activity);
+                                                    }}
+                                                    className={`w-full bg-transparent border-2 border-[#800020] text-[#800020] hover:bg-[#800020] hover:text-white mt-auto transition-all rounded-xl py-6 tracking-wide text-sm active:scale-95`}
+                                                >
+                                                    View Details
+                                                </Button>
+                                            )}
                                         </CardContent>
                                     </Card>
                                 </motion.div>

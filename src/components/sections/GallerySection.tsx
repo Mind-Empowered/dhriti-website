@@ -21,7 +21,7 @@ export function GallerySection() {
     const galleryImages = [
         { src: "/images/gallery/gallery1.jpeg", alt: "Community Workshop", caption: "Safe Circles", desc: "Conversations that break the silence." },
         { src: "/images/gallery/gallery2.jpeg", alt: "Wellness Activities", caption: "Mindful Moments", desc: "Practicing the art of being present." },
-        { src: "/images/gallery/gallery3.jpeg", alt: "Festival Gathering", caption: "Dhriti Experience", desc: "A movement for mental wellness in Kerala." }
+        { src: "/images/gallery/gallery3.jpeg", alt: "Festival Gathering", caption: "Experiences", desc: "A movement for mental wellness in Kerala." }
     ];
 
     return (
@@ -289,7 +289,7 @@ export function GallerySection() {
                                 transition={{ delay: 0.3 }}
                                 className="mt-4 text-white/40 font-medium text-[10px] tracking-[0.2em] uppercase"
                             >
-                                Voices of Dhriti Experience
+                                Voices of Dhriti Experiences
                             </motion.p>
                         </motion.div>
                     </div>
