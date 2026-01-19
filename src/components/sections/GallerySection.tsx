@@ -163,6 +163,12 @@ export function GallerySection() {
                                 author: "Nakshatra P Nair",
                                 role: "Content & Editorial Lead",
                                 image: "/images/gallery/nakshatra.jpeg"
+                            },
+                            {
+                                quote: "In our journey to find ourselves, we get lost, unable to see ourselves in others. Like us, they are also going through the similar ups and downs of life. Dhriti is where you can meet the different versions of you - they can help you and you can help them.",
+                                author: "Vignesh N",
+                                role: "CEO, Mevitech",
+                                image: "/images/gallery/vignesh.jpeg"
                             }
                         ].map((testimonial, index) => (
                             <motion.div
