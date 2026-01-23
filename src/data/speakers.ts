@@ -62,5 +62,12 @@ export const SPEAKERS_DATA = [
         role: "Standup Comedian",
         topic: "Standup Comedy",
         bio: "I’ve never been to a festival for the mind, but I know our mind is the anchor of it all. To bring my wit and perform standup in Kerala's first mental health festival at Pallathuraman Memorial Park on the Valentine's day is an honour. All the best to the curators for doing this fabulous initiative"
+    },
+    {
+        image: "/images/speakers/speaker_theatre.png",
+        name: "Sojan Rosamma Sam",
+        role: "Theatre Artist & Workshop Facilitator",
+        topic: "Theatre Workshop",
+        bio: "A passionate theatre artist and facilitator dedicated to using performance arts as a medium for emotional expression and personal transformation. Sojan brings years of experience in theatre education, helping individuals discover their voice and build confidence through the power of creative performance."
     }
 ];

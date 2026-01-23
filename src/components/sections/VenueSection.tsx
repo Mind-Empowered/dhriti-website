@@ -55,7 +55,7 @@ export function VenueSection() {
                     >
                         <iframe
                             title="Venue Location Map: Pallathuraman Memorial Park"
-                            src="https://maps.google.com/maps?q=Pallathuraman+Memorial+Park%2C+Thamaraparambu%2C+Kochi%2C+Kerala&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                            src="https://www.openstreetmap.org/export/embed.html?bbox=76.2392,9.9469,76.2492,9.9569&layer=mapnik&marker=9.9519,76.2442"
                             width="100%"
                             height="100%"
                             className="border-0 grayscale-0 md:grayscale md:group-hover:grayscale-0 transition-all duration-700"
