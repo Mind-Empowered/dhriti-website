@@ -11,6 +11,14 @@ export const ACTIVITIES_DATA = [
         image: "/images/speakers/speaker_standup.jpeg"
     },
     {
+        title: "Theatre Workshop",
+        description: "Explore the transformative power of theatre and performance arts in expressing emotions, building confidence, and fostering resilience. Through interactive exercises and creative expression, discover how the stage can be a powerful tool for personal growth and emotional healing.",
+        timing: "2:00 PM - 3:30 PM",
+        instruction: "Wear comfortable clothing. No prior theatre experience required.",
+        speaker: "Sojan Rosamma Sam",
+        image: "/images/speakers/speaker_theatre.png"
+    },
+    {
         title: "Vanitha Police Self-Defence",
         description: "A vital self-defence workshop empoweringly led by women officers of the Kerala Police, teaching practical safety techniques and situational awareness.",
         timing: "Special Workshop",

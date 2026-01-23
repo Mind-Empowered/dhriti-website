@@ -11,7 +11,8 @@ import { SpeakersSection } from "@/components/sections/SpeakersSection";
 import { ImpactSection } from "@/components/sections/ImpactSection";
 import { VenueSection } from "@/components/sections/VenueSection";
 import { GallerySection } from "@/components/sections/GallerySection";
-import { PartnershipSection } from "@/components/sections/PartnershipSection";
+// TODO: Uncomment when real sponsors are available
+// import { PartnershipSection } from "@/components/sections/PartnershipSection";
 import { FAQSection } from "@/components/sections/FAQSection";
 import { ContactSection } from "@/components/sections/ContactSection";
 import { Footer } from "./components/sections/Footer";
@@ -56,7 +57,8 @@ function App() {
         <SpeakersSection />
         <VenueSection />
         <GallerySection />
-        <PartnershipSection />
+        {/* TODO: Uncomment when real sponsors are available */}
+        {/* <PartnershipSection /> */}
         <FAQSection />
         <ContactSection />
         <Footer />
