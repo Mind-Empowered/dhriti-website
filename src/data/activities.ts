@@ -19,6 +19,14 @@ export const ACTIVITIES_DATA = [
         image: "/images/speakers/speaker_theatre.png"
     },
     {
+        title: "Theatre Workshop on Drug Abuse",
+        description: "A specialized theatre workshop focused on raising awareness about drug abuse and its impact, using performance as a tool for education, emotional processing, and social change.",
+        timing: "TBA",
+        instruction: "Open to all. No prior experience required.",
+        speaker: "Divyadharshan",
+        image: "/images/activities/theater.jpeg"
+    },
+    {
         title: "Vanitha Police Self-Defence",
         description: "A vital self-defence workshop empoweringly led by women officers of the Kerala Police, teaching practical safety techniques and situational awareness.",
         timing: "Special Workshop",
@@ -95,7 +103,7 @@ export const ACTIVITIES_DATA = [
         description: "A safe, anonymous space to share your burdens and feel heard. Drop your anonymous notes.",
         timing: "All Day",
         instruction: "Anonymous submission box available.",
-        speaker: "Counseling Team",
+        speaker: "Cini Padmanabhan",
         image: "/images/activities/voice_worries.png"
     },
     {
@@ -144,7 +152,7 @@ export const ACTIVITIES_DATA = [
         description: "Craft tokens of friendship and reminder of our shared bonds.",
         timing: "Ongoing",
         instruction: "Make one, take one.",
-        speaker: "Nakshatra P Nair",
+        speaker: "Nayna",
         image: "/images/activities/bracelet.png"
     },
     {

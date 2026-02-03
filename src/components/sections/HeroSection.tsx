@@ -1,31 +1,19 @@
 import { useState, useEffect } from "react";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Sparkles, X } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
-export function HeroSection() {
+interface HeroSectionProps {
+    onOpenRegistration: () => void;
+}
+
+export function HeroSection({ onOpenRegistration }: HeroSectionProps) {
     const [timeLeft, setTimeLeft] = useState({
         days: 0,
         hours: 0,
         minutes: 0,
         seconds: 0
     });
-
-    const [showVolunteerForm, setShowVolunteerForm] = useState(false);
-
-    useEffect(() => {
-        if (showVolunteerForm) {
-            document.body.style.overflow = 'hidden';
-            document.documentElement.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = '';
-            document.documentElement.style.overflow = '';
-        }
-        return () => {
-            document.body.style.overflow = '';
-            document.documentElement.style.overflow = '';
-        };
-    }, [showVolunteerForm]);
 
     const { scrollY } = useScroll();
     const y1 = useTransform(scrollY, [0, 500], [0, 200]);
@@ -71,15 +59,7 @@ export function HeroSection() {
 
             {/* Floating Mandalas Layer */}
             <motion.div className="absolute inset-0 opacity-10 md:opacity-5 block" style={{ y: useTransform(scrollY, [0, 1000], [0, -300]) }}>
-                {/* Note: In original code url(#mandala-pattern) was used but definition might be missing in snippet. 
-             If it relies on main index.html or other svg defs, it's fine. 
-             Assuming standard svg pattern usage. */}
                 <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                    {/* If pattern is not defined in this file, it might not render. 
-               The original code had <rect ... fill="url(#mandala-pattern)" /> but I don't see the defs for mandala-pattern in the snippet I viewed. 
-               I will assume it is defined elsewhere or I should include a generic one. 
-               For safety, I'll use the same rect but if def is missing it will be blank. 
-               However, to match functionality, I will leave it as is. */}
                     <rect width="100%" height="100%" fill="url(#mandala-pattern)" />
                 </svg>
             </motion.div>
@@ -279,9 +259,9 @@ export function HeroSection() {
                         <Button
                             size="lg"
                             className="w-full sm:w-auto bg-[#D4AF37] hover:bg-[#C4A137] text-[#800020] font-bold text-base md:text-lg px-8 py-4 md:px-8 md:py-6 h-auto shadow-xl active:scale-95 transition-transform duration-200"
-                            onClick={() => setShowVolunteerForm(true)}
+                            onClick={onOpenRegistration}
                         >
-                            Join as Volunteer
+                            Get Tickets
                         </Button>
                         <a href="https://www.mind-empowered.org" className="w-full sm:w-auto">
                             <Button
@@ -294,52 +274,6 @@ export function HeroSection() {
                     </div>
                 </motion.div>
             </div>
-
-            {/* Volunteer Registration Modal */}
-            <AnimatePresence>
-                {showVolunteerForm && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            onClick={() => setShowVolunteerForm(false)}
-                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-                            aria-hidden="true"
-                        />
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                            className="bg-white rounded-2xl overflow-hidden w-full max-w-3xl h-[85vh] shadow-2xl relative z-10 flex flex-col"
-                            role="dialog"
-                            aria-modal="true"
-                        >
-                            <div className="flex justify-between items-center p-4 border-b border-[#D4AF37]/20 bg-[#FAF9F6]">
-                                <h3 className="text-xl font-bold text-[#800020] flex items-center gap-2">
-                                    <Sparkles className="w-5 h-5 text-[#D4AF37]" /> Join as Volunteer
-                                </h3>
-                                <button
-                                    onClick={() => setShowVolunteerForm(false)}
-                                    className="p-2 hover:bg-black/5 rounded-full transition-colors"
-                                    aria-label="Close form"
-                                >
-                                    <X className="w-6 h-6 text-[#800020]" />
-                                </button>
-                            </div>
-                            <div className="flex-1 bg-white relative">
-                                <iframe
-                                    src="https://docs.google.com/forms/d/e/1FAIpQLSfePtLZkWoIhhsnl2Bry1afXVySetPY1rwEgGcO0fxvEOuDPg/viewform?embedded=true"
-                                    className="absolute inset-0 w-full h-full border-0"
-                                    title="Volunteer Registration Form"
-                                >
-                                    Loading...
-                                </iframe>
-                            </div>
-                        </motion.div>
-                    </div>
-                )}
-            </AnimatePresence>
         </section>
     );
 }

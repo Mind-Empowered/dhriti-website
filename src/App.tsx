@@ -17,12 +17,16 @@ import { FAQSection } from "@/components/sections/FAQSection";
 import { ContactSection } from "@/components/sections/ContactSection";
 import { Footer } from "./components/sections/Footer";
 import { LoadingScreen } from "@/components/LoadingScreen";
+import { RegistrationModal } from "@/components/RegistrationModal";
+import { VolunteerModal } from "@/components/VolunteerModal";
 
 function App() {
   // Debug initialization
   console.log("Dhriti App Initialized");
   const [surpriseBoxRef, setSurpriseBoxRef] = useState<HTMLElement | null>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
+  const [isVolunteerOpen, setIsVolunteerOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,10 +50,10 @@ function App() {
       {/* Dynamic Background with Butterfly Effect */}
       <ButterflyBackground attractionTarget={surpriseBoxRef} />
 
-      <Navbar />
+      <Navbar onOpenVolunteer={() => setIsVolunteerOpen(true)} />
 
       <main className="relative">
-        <HeroSection />
+        <HeroSection onOpenRegistration={() => setIsRegistrationOpen(true)} />
         <WhySection />
         <ObjectivesSection />
         <ImpactSection />
@@ -63,6 +67,9 @@ function App() {
         <ContactSection />
         <Footer />
       </main>
+
+      <RegistrationModal isOpen={isRegistrationOpen} onOpenChange={setIsRegistrationOpen} />
+      <VolunteerModal isOpen={isVolunteerOpen} onOpenChange={setIsVolunteerOpen} />
 
       {/* Scroll to Top Button */}
       <AnimatePresence>

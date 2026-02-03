@@ -3,7 +3,6 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { LazyImage } from "@/components/ui/LazyImage";
-import { RegistrationModal } from "./RegistrationModal";
 import {
     Menu,
     Home,
@@ -17,9 +16,12 @@ import {
     Linkedin
 } from "lucide-react";
 
-export function Navbar() {
+interface NavbarProps {
+    onOpenVolunteer: () => void;
+}
+
+export function Navbar({ onOpenVolunteer }: NavbarProps) {
     const [isOpen, setIsOpen] = useState(false);
-    const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
 
     return (
         <>
@@ -45,9 +47,9 @@ export function Navbar() {
                             <a href="#contact" className="text-white/90 hover:text-[#D4AF37] transition-colors font-medium">Contact Us</a>
                             <Button
                                 className="bg-[#D4AF37] hover:bg-[#C4A137] text-[#8B4513] font-bold rounded-full px-6 shadow-lg hover:shadow-[#D4AF37]/50 transition-all"
-                                onClick={() => setIsRegistrationOpen(true)}
+                                onClick={onOpenVolunteer}
                             >
-                                Get Tickets
+                                Volunteer Now
                             </Button>
                         </div>
 
@@ -106,16 +108,16 @@ export function Navbar() {
                                                         </span>
                                                     </a>
                                                 ))}
-                                                {/* Mobile Get Tickets Button */}
+                                                {/* Mobile Volunteer Button */}
                                                 <div className="mt-4">
                                                     <Button
                                                         className="w-full bg-[#D4AF37] hover:bg-[#C4A137] text-[#8B4513] font-bold rounded-full py-6 shadow-md"
                                                         onClick={() => {
                                                             setIsOpen(false);
-                                                            setIsRegistrationOpen(true);
+                                                            onOpenVolunteer();
                                                         }}
                                                     >
-                                                        Get Tickets
+                                                        Volunteer Now
                                                     </Button>
                                                 </div>
                                             </nav>
@@ -142,7 +144,6 @@ export function Navbar() {
                     </div>
                 </div>
             </nav>
-            <RegistrationModal isOpen={isRegistrationOpen} onOpenChange={setIsRegistrationOpen} />
         </>
     );
 }
