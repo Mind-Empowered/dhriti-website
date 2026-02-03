@@ -160,7 +160,7 @@ export function GallerySection() {
                             },
                             {
                                 quote: "The butterfly does not rush its wings, it waits until the sky feels like home. And Dhriti mirrors this belief- to hold on with quiet courage, allowing healing to take its time, trusting the process, and creating a space where minds feel safe enough to grow, unfold, and finally fly.",
-                                author: "Nakshatra P Nair",
+                                author: "Nayna",
                                 role: "Content & Editorial Lead",
                                 image: "/images/gallery/nakshatra.jpeg"
                             },

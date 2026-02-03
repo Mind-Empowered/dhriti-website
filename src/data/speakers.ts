@@ -35,8 +35,8 @@ export const SPEAKERS_DATA = [
         bio: "A dedicated team from the Kerala Police Vanitha Wing, including ASI Rethnamani T.L., ASI Lissy Mathai, and Civil Police Officers Syama and Jancy. They specialize in empowering women through practical self-defence training, situational awareness, and safety education."
     },
     {
-        image: "/images/speakers/speaker_bracelet.jpeg",
-        name: "Nakshatra P Nair",
+        image: "/images/speakers/speaker_bracelet_nayna.jpeg",
+        name: "Nayna",
         role: "Creative Facilitator",
         topic: "Bracelet Making Workshop",
         bio: "Leading the creative session on bracelet making, fostering connection and friendship through shared crafting and creativity."
@@ -69,5 +69,19 @@ export const SPEAKERS_DATA = [
         role: "Theatre Artist & Workshop Facilitator",
         topic: "Theatre Workshop",
         bio: "A passionate theatre artist and facilitator dedicated to using performance arts as a medium for emotional expression and personal transformation. Sojan brings years of experience in theatre education, helping individuals discover their voice and build confidence through the power of creative performance."
+    },
+    {
+        image: "/images/speakers/speaker_voiceyourworries.jpeg",
+        name: "Cini Padmanabhan",
+        role: "Mental Health Professional",
+        topic: "Voice Your Worries",
+        bio: "Facilitating the 'Voice Your Worries' session, providing a safe and supportive space for participants to share their burdens and find emotional relief."
+    },
+    {
+        image: "/images/speakers/speaker_drugabuse.png",
+        name: "Divyadharshan",
+        role: "Theatre Artist",
+        topic: "Theatre Workshop on Drug Abuse",
+        bio: "Leading a specialized theatre workshop focused on raising awareness about drug abuse and its impact, using performance as a tool for education and social change."
     }
 ];
