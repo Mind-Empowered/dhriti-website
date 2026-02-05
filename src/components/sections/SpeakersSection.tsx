@@ -2,10 +2,11 @@ import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LazyImage } from "@/components/ui/LazyImage";
 import { SPEAKERS_DATA } from "@/data/speakers";
-import { ChevronLeft, ChevronRight, Quote, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Quote, X, MoveRight } from "lucide-react";
 
 export function SpeakersSection() {
     const [selectedSpeaker, setSelectedSpeaker] = useState<{ name: string; role: string; topic: string; image: string; bio: string } | null>(null);
+    const [viewingPoster, setViewingPoster] = useState<string | null>(null);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     const scroll = (direction: 'left' | 'right') => {
@@ -173,11 +174,22 @@ export function SpeakersSection() {
                                 </div>
 
                                 <div className="space-y-8">
-                                    <div className="bg-[#FAF9F6] p-6 rounded-2xl border border-gray-100">
-                                        <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Session Topic</h4>
-                                        <p className="text-2xl text-[#800020] font-bold">
-                                            {selectedSpeaker.topic}
-                                        </p>
+                                    <div className="bg-[#FAF9F6] p-6 rounded-2xl border border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                                        <div>
+                                            <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Session Topic</h4>
+                                            <p className="text-2xl text-[#800020] font-bold">
+                                                {selectedSpeaker.topic}
+                                            </p>
+                                        </div>
+                                        {(selectedSpeaker as any).poster && (
+                                            <button
+                                                onClick={() => setViewingPoster((selectedSpeaker as any).poster)}
+                                                className="inline-flex items-center gap-2 px-6 py-3 bg-[#800020] text-white rounded-xl font-bold text-sm hover:bg-[#D4AF37] transition-all shadow-lg active:scale-95 group"
+                                            >
+                                                <span>View Event Poster</span>
+                                                <MoveRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                            </button>
+                                        )}
                                     </div>
 
                                     <div>
@@ -194,6 +206,48 @@ export function SpeakersSection() {
                     </div>
                 )}
             </AnimatePresence>
+
+            {/* Poster Full Screen Modal */}
+            <AnimatePresence>
+                {viewingPoster && (
+                    <div className="fixed inset-0 z-[110] flex items-center justify-center md:p-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setViewingPoster(null)}
+                            className="absolute inset-0 bg-black/95 backdrop-blur-xl"
+                        />
+
+                        {/* Back Button */}
+                        <motion.button
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -20 }}
+                            onClick={() => setViewingPoster(null)}
+                            className="absolute top-6 left-6 z-[120] flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-[#800020] text-white rounded-full backdrop-blur-md transition-all border border-white/20 group"
+                        >
+                            <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                            <span className="font-bold text-sm tracking-wide">Back to Profile</span>
+                        </motion.button>
+
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            className="relative w-full max-w-4xl max-h-[95vh] overflow-hidden flex items-center justify-center z-10 p-4"
+                        >
+                            <LazyImage
+                                src={viewingPoster}
+                                alt="Event Poster"
+                                className="w-full h-auto max-h-[90vh] object-contain shadow-2xl rounded-xl"
+                                wrapperClassName="w-full h-auto max-h-[90vh] flex items-center justify-center bg-transparent"
+                            />
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </section>
     );
 }
+
